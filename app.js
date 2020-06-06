@@ -9,7 +9,7 @@
     const session = require('express-session')
     const flash = require('connect-flash')
 
-    const handlebars = require("handlebars")
+    
 
 //Configurações
     //configurar sessao
@@ -30,10 +30,35 @@
         app.use(bodyParser.json());
     
     //Handlebars
-         app.engine('handlebars', handleBars({defaultLayout: 'main'}));
+        const hbs = handleBars.create({
+            defaultLayout: 'main',
+
+            //Helper customizados
+            helpers: {
+                dateFormat: (data) =>{
+                    data = new Date(data)
+                    var dia = data.getDate()
+                    var mes = (data.getMonth()+1)
+                    var ano = data.getFullYear()
+                    if(dia <= 9){
+                        dia = "0" + dia
+                    }
+
+                    if(mes <= 9){
+                        mes = "0" + mes
+                    }
+                    return mes +"/"+ dia +"/"+ ano // tem que ser nesta ordem, mas fica correta na view
+
+                }
+                    
+            }
+
+        })
+
+         app.engine('handlebars', hbs.engine);
          app.set('view engine', 'handlebars');
          
-
+         
     
     //Mongoose
     mongoose.Promise = global.Promise
@@ -60,4 +85,3 @@ app.listen(port, () =>{
     console.log('servidor rodando');
 });
 
-module.exports.register = handlebars.registerHelper('dateFormat', require('handlebars-dateformat'));
