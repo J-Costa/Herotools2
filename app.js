@@ -35,6 +35,7 @@
 
             //Helper customizados
             helpers: {
+                //formatar data
                 dateFormat: (data) =>{
                     data = new Date(data)
                     var dia = data.getDate()
@@ -47,8 +48,10 @@
                     if(mes <= 9){
                         mes = "0" + mes
                     }
-                    return mes +"/"+ dia +"/"+ ano // tem que ser nesta ordem, mas fica correta na view
-
+                    return dia +"/"+ mes +"/"+ ano //TODO: se ordem de salvamento está correta
+                },
+                json: (context) =>{
+                    return JSON.stringify(context);
                 }
                     
             }

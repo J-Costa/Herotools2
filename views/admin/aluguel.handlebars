@@ -1,4 +1,4 @@
-<h2>Lista aluguéis:</h2>
+<h2>Lista alugueis:</h2>
 <hr>
 <a href="/admin/aluguel/add"><button class="btn btn-success">Novo aluguel</button></a>
 
@@ -10,9 +10,9 @@
             <br>
             <small>Nome cliente: {{idCliente.nome}}</small>
             <br>
-            <small>Data retirada: {{dataRetirada}}</small>
+            <small>Data retirada: {{dateFormat dataRetirada}}</small>
             <br>
-            <small>Data devolução: {{dataDevolucao}}</small>
+            <small>Data devolução: {{dateFormat dataDevolucao}}</small>
             <br>
             <a href="/admin/aluguel/edit/{{_id}}"><div class="btn btn-success mt-4">Editar aluguel</div></a>
             <br>

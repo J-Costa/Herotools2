@@ -2,33 +2,35 @@
 <div class="card">
     <div class="card-body">
        <form action="/admin/aluguel/edit" method="POST">
-       <input type="hidden" name="id" value="{{aluguel._id}}"> 
-            <label for="ferramenta"> Usuario:</label>
-             <label for="ferramenta"> Usuario:</label>
+       <input type="hidden" name="id" value="{{aluguels._id}}"> 
+              <label for="ferramenta"> Usuario:</label>
             <select name="usuario" class='custom-select'>
-                {{#each usuario}}
-                    <option value="{{usuario._id}}" >{{usuario.nome}}</option>
+                {{#each usuarios}}
+                    <option value="{{_id}}" >{{nome}}</option>
                 {{else}}
-                    <option value="">Nenhuma ferramenta localizada</option>
+                    <option value="">Nenhum usuário localizado!</option>
                 {{/each}}
             </select> 
 
             <label for="ferramenta"> Ferramenta</label>
             <select name="ferramenta" class='custom-select'>
-                {{#each ferramenta}}
-                    <option value="{{ferramenta._id}}" >{{ferramenta.modelo}}</option>
+                {{#each ferramentas}}
+                    <option value="{{_id}}" >{{modelo}}</option>
                 {{else}}
-                    <option value="">Nenhuma ferramenta localizada</option>
+                    <option value="">Nenhuma ferramenta localizada!</option>
                 {{/each}}
-            </select>  
+            </select> 
 
             <label for="dataRetirada">Data de retirada: </label>
-            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control" value="{{dateFormat aluguel.dataRetirada}}">
+            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control" value="{{dateFormat aluguels.dataRetirada}}">
 
-            <label for="dataDevolucao"> Data de devolução: </label>
-            <input type="text" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control" value="{{ dateFormat aluguel.dataDevolucao }}">
+            <label for="dataDevolucao"> 
+                Data de devolução: 
+            </label>
+
+            <input type="datetime" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control" value="{{dateFormat aluguels.dataDevolucao}}">
             <br>
-            <button type="submit" class="btn btn-success">Salvar aluguel</button>
+            <button type="submit" class="btn btn-success">Editar aluguel</button>
         </form>
     </div>
 </div>

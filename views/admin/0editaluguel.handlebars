@@ -1,30 +1,32 @@
-<h3>Novo aluguel:</h3>
+<h3>Editar aluguel:</h3>
 <div class="card">
     <div class="card-body">
-        <form action="/admin/aluguel/new" method="POST">
+       <form action="/admin/aluguel/edit" method="POST">
+       <input type="hidden" name="id" value="{{aluguel._id}}"> 
             <label for="ferramenta"> Usuario:</label>
+             <label for="ferramenta"> Usuario:</label>
             <select name="usuario" class='custom-select'>
                 {{#each usuario}}
-                    <option value="{{_id}}" >{{nome}}</option>
+                    <option value="{{usuario._id}}" >{{usuario.nome}}</option>
                 {{else}}
-                    <option value="">Nenhum usuário localizado!</option>
+                    <option value="">Nenhum usuário localizado</option>
                 {{/each}}
             </select> 
 
             <label for="ferramenta"> Ferramenta</label>
             <select name="ferramenta" class='custom-select'>
                 {{#each ferramenta}}
-                    <option value="{{_id}}" >{{modelo}}</option>
+                    <option value="{{ferramenta._id}}" >{{ferramenta.modelo}}</option>
                 {{else}}
                     <option value="">Nenhuma ferramenta localizada</option>
                 {{/each}}
-            </select> 
+            </select>  
 
             <label for="dataRetirada">Data de retirada: </label>
-            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control">
+            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control" value="{{dateFormat aluguel.dataRetirada}}">
 
             <label for="dataDevolucao"> Data de devolução: </label>
-            <input type="datetime" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control">
+            <input type="text" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control" value="{{ dateFormat aluguel.dataDevolucao }}">
             <br>
             <button type="submit" class="btn btn-success">Salvar aluguel</button>
         </form>

@@ -9,12 +9,15 @@ require('../models/Aluguel')
 const Aluguel = mongoose.model('Aluguel')
 
 
+//TODO: inserir validações em todos os saves
+
+
 //rota principal, tem que ser o index
 router.get('/', (req,res)=>{
     res.render("admin/index")
 })
 
-//Rota usuarios
+//Rota usuarios {
     //view adiciona usuario
     router.get('/usuarios/add', (req,res)=>{
         res.render('admin/addusuarios')
@@ -105,8 +108,9 @@ router.get('/', (req,res)=>{
         })
     })
 
-    
-//rotas ferramentas
+//} fim usuários
+
+//rotas ferramentas {
     //rota lista ferramentas
         router.get('/ferramentas', (req,res)=>{
             Ferramenta.find({}).lean().then((ferramenta)=>{
@@ -179,8 +183,9 @@ router.get('/', (req,res)=>{
                 console.log('Erro ao salvar ferramenta: ' + err)
             })
         })
+//} fim ferramentas
 
-//rotas aluguel
+//rotas aluguel {
     //rota lista aluguel
     router.get('/aluguel', (req,res)=>{
         Aluguel.find({}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
@@ -190,17 +195,60 @@ router.get('/', (req,res)=>{
             res.redirect('/admin')
         })
     })
-
+    
+    //TODO: 
     // edita aluguel
     router.get("/aluguel/edit/:id", (req, res) => {
-        Aluguel.findOne({_id:req.params.id}).lean().populate("idCliente").populate("idFerramenta").then((aluguel) => {
-            var dataFormatada= new Date(aluguel.dataDevolucao).getFullYear()
-            res.render("admin/editaluguel", {aluguel: aluguel, dataFormatada}) 
+        Aluguel.findOne({_id:req.params.id}).lean().then((aluguels) => {
+            Usuario.find({}).lean().then((usuarios) => {
+                Ferramenta.find({}).lean().then((ferramentas)=>{
+                    Aluguel.find({}).lean().populate("idCliente").populate("idFerramenta").then((relacao)=>{
+                        res.render("admin/editaluguel", {aluguels: aluguels,
+                                                    ferramentas: ferramentas, 
+                                                    usuarios: usuarios,
+                                                    relacao: relacao})
+                    }).catch((er) => {
+                        req.flash("error_msg", "Erro 00ea: " + err)
+                        res.redirect("/admin/aluguel")
+                    })
+                }).catch((err)=> {
+                    req.flash("error_msg", "Erro 01ea: " + err)
+                    res.redirect("/admin/aluguel")
+                })
+
+            }).catch ((err)=> {
+                req.flash("error_msg", "Erro 02ea: " + err)
+                res.redirect("/admin/aluguel")
+            })
+         
         }).catch((err) => {
-            req.flash("error_msg" , "Esta aluguel não existe!" + err)
+            req.flash("error_msg" , "Este aluguel não existe!")
             res.redirect("/admin/aluguel")
         })
-    }) 
+    })
+    
+
+    // editar aluguel no banco
+    router.post("/aluguel/edit" , (req,res) => {
+
+        Aluguel.findOne({_id: req.body.id}).then((aluguel) => {
+            aluguel.idCliente = req.body.usuario
+            aluguel.idFerramenta = req.body.ferramenta
+            aluguel.dataRetirada = req.body.dataDevolucao
+            aluguel.dataDevolucao = req.body.dataRetirada
+
+            aluguel.save().then(() =>{
+                req.flash("success_msg", "Aluguel editado!")
+                res.redirect("/admin/aluguel")
+            }).catch((err) => {
+                req.flash("error_msg", "01 - Erro ao salvar edicao! " + err)
+                res.redirect("/admin/aluguel")
+            })
+        }).catch((err) => {
+            req.flash("error_msg", "02 - Erro ao editar! " + err)
+            res.redirect("/admin/aluguel")
+        })
+    })
 
     //rota deletar aluguel
     router.post("/aluguel/deletar", (req, res) => {
@@ -240,6 +288,8 @@ router.get('/', (req,res)=>{
                     console.log("erro ao exibir: " + err)
             })
         })
+//} fim aluguel
+
 
 //exportacao das rotas
 module.exports = router
