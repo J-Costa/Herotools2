@@ -196,7 +196,7 @@ router.get('/', (req,res)=>{
         })
     })
     
-    //TODO: 
+     
     // edita aluguel
     router.get("/aluguel/edit/:id", (req, res) => {
         Aluguel.findOne({_id:req.params.id}).lean().then((aluguels) => {
