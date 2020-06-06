@@ -1,0 +1,25 @@
+<h3>Editar aluguel:</h3>
+<div class="card">
+    <div class="card-body">
+       <form action="/admin/aluguel/edit" method="POST">
+       <input type="hidden" name="id" value="{{aluguel._id}}"> 
+            <label for="ferramenta"> Usuario:</label>
+            <select name="usuario" class='custom-select' >
+                    <option value="{{aluguel.idCliente.nome}}" >{{aluguel.idCliente.nome}}</option>
+            </select> 
+
+            <label for="ferramenta"> Ferramenta</label>
+            <select name="ferramenta" class='custom-select' >
+                    <option value="{{aluguel.idFerramenta.modelo}}" >{{aluguel.idFerramenta.modelo}}</option>
+            </select> 
+
+            <label for="dataRetirada">Data de retirada: </label>
+            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control" value="{{aluguel.dataRetirada}}">
+
+            <label for="dataDevolucao"> Data de devolução: </label>
+            <input type="datetime" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control" value="{{aluguel.dataDevolucao}}">
+            <br>
+            <button type="submit" class="btn btn-success">Salvar aluguel</button>
+        </form>
+    </div>
+</div>

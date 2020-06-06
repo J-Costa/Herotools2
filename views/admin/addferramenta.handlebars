@@ -1,0 +1,20 @@
+<h3>Nova ferramenta:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/ferramentas/new" method="POST">
+            <label for="ferramenta">Tipo de ferramenta:</label>
+            <input type="text" id="ferramenta" name="ferramenta" placeholder="ferramenta" class="form-control">
+
+            <label for="tipo">Tipo:</label>
+            <input type="text" id="tipo" name="tipo" placeholder="Tipo de ferramenta" class="form-control">
+
+            <label for="modelo">Modelo de ferramenta: </label>
+            <input type="text" id="modelo" name="modelo" placeholder="Modelo" class="form-control">
+
+            <label for="unidade"> Unidade: </label>
+            <input type="number" name="unidade" id="unidade" placeholder="unidade" class="form-control">
+            <br>
+            <button type="submit" class="btn btn-success">Salvar ferramenta</button>
+        </form>
+    </div>
+</div>

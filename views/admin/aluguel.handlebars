@@ -1,0 +1,27 @@
+<h2>Lista aluguéis:</h2>
+<hr>
+<a href="/admin/aluguel/add"><button class="btn btn-success">Novo aluguel</button></a>
+
+{{#each aluguel}}
+    <div class="card mt-4">
+        <div class="card-body mt-2">
+            <h4>{{idFerramenta.ferramenta}}</h4>
+            <small>Modelo: {{idFerramenta.modelo}} </small>
+            <br>
+            <small>Nome cliente: {{idCliente.nome}}</small>
+            <br>
+            <small>Data retirada: {{dataRetirada}}</small>
+            <br>
+            <small>Data devolução: {{dataDevolucao}}</small>
+            <br>
+            <a href="/admin/aluguel/edit/{{_id}}"><div class="btn btn-success mt-4">Editar aluguel</div></a>
+            <br>
+            <form action="/admin/aluguel/deletar" method="POST" >
+                <input type="hidden" name="id" value="{{_id}}">
+                <button class="btn btn-danger mt-2">Deletar aluguel</button>
+            </form>
+        </div>
+    </div>
+{{else}}
+
+{{/each}}

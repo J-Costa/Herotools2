@@ -1,0 +1,21 @@
+<h2>Lista usuários:</h2>
+<hr>
+<a href="/admin/usuarios/add"><button class="btn btn-success">Novo usuário:</button></a>
+
+{{#each usuario}}   
+    <div class="card mt-4">
+        <div class="card-body mt-4">
+            <h4>{{nome}}</h4>
+            <small>{{email}}</small>
+            <br>
+            <a href="/admin/usuarios/edit/{{_id}}"><div class="btn btn-success mt-4">Editar usuário</div></a>
+            <br>
+            <form action="/admin/usuarios/deletar" method="POST" >
+                <input type="hidden" name="id" value="{{_id}}">
+                <button class="btn btn-danger mt-2">Deletar usuário</button>
+            </form>
+        </div>
+    </div>
+{{else}}
+
+{{/each}}

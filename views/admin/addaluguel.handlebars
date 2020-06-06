@@ -1,0 +1,32 @@
+<h3>Novo aluguel:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/aluguel/new" method="POST">
+            <label for="ferramenta"> Usuario:</label>
+            <select name="usuario" class='custom-select'>
+                {{#each usuario}}
+                    <option value="{{_id}}" >{{nome}}</option>
+                {{else}}
+                    <option value="">Nenhuma ferramenta localizada</option>
+                {{/each}}
+            </select> 
+
+            <label for="ferramenta"> Ferramenta</label>
+            <select name="ferramenta" class='custom-select'>
+                {{#each ferramenta}}
+                    <option value="{{_id}}" >{{modelo}}</option>
+                {{else}}
+                    <option value="">Nenhuma ferramenta localizada</option>
+                {{/each}}
+            </select> 
+
+            <label for="dataRetirada">Data de retirada: </label>
+            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control">
+
+            <label for="dataDevolucao"> Data de devolução: </label>
+            <input type="datetime" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control">
+            <br>
+            <button type="submit" class="btn btn-success">Salvar aluguel</button>
+        </form>
+    </div>
+</div>

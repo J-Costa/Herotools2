@@ -1,0 +1,21 @@
+<h3>Editar ferramenta:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/ferramentas/edit" method="POST">
+            <input type="hidden" name="id" value="{{ferramenta._id}}"> 
+            <label for="ferramenta">Tipo de ferramenta:</label>
+            <input type="text" id="ferramenta" name="ferramenta" placeholder="ferramenta" class="form-control" value="{{ferramenta.ferramenta}}">
+
+            <label for="tipo">Tipo:</label>
+            <input type="text" id="tipo" name="tipo" placeholder="Tipo de ferramenta" class="form-control" value="{{ferramenta.tipo}}">
+
+            <label for="modelo">Modelo de ferramenta: </label>
+            <input type="text" id="modelo" name="modelo" placeholder="Modelo" class="form-control" value="{{ferramenta.modelo}}">
+
+            <label for="unidade"> Unidade: </label>
+            <input type="number" name="unidade" id="unidade" placeholder="unidade" class="form-control" value="{{ferramenta.unidade}}">
+            <br>
+            <button type="submit" class="btn btn-success">Editar ferramenta</button>
+        </form>
+    </div>
+</div>

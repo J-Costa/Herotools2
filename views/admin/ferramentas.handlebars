@@ -1,0 +1,21 @@
+<h2>Lista ferramentas:</h2>
+<hr>
+<a href="/admin/ferramentas/add"><button class="btn btn-success">Nova ferramenta</button></a>
+
+{{#each ferramenta}}
+    <div class="card mt-4">
+        <div class="card-body mt-2">
+            <h4>{{ferramenta}}</h4>
+            <small>{{modelo}}</small>
+            <br>
+            <a href="/admin/ferramentas/edit/{{_id}}"><div class="btn btn-success mt-4">Editar ferramenta</div></a>
+            <br>
+            <form action="/admin/ferramentas/deletar" method="POST" >
+                <input type="hidden" name="id" value="{{_id}}">
+                <button class="btn btn-danger mt-2">Deletar ferramenta</button>
+            </form>
+        </div>
+    </div>
+{{else}}
+
+{{/each}}

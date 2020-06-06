@@ -1,0 +1,24 @@
+{
+  "name": "herotools",
+  "version": "1.0.0",
+  "description": "App Hero Tools",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.4",
+    "express-session": "^1.17.1",
+    "handlebars-dateformat": "^1.1.1",
+    "mongoose": "^5.9.16"
+  },
+  "devDependencies": {
+    "handlebars": "^4.7.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
