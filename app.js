@@ -8,6 +8,8 @@
     const path = require('path')
     const session = require('express-session')
     const flash = require('connect-flash')
+    require('./models/Ferramenta')
+    const Ferramenta = mongoose.model('Ferramenta')
 
     
 
@@ -80,7 +82,19 @@
         })
         
 //Rotas
+    //pagina principal, carrega ferramentas
+    app.get("/" , (req,res) => {
+        Ferramenta.find({}).lean().then((ferramentas) => {
+        res.render('index', {ferramentas: ferramentas})
+        })
+    })
+    
     app.use('/admin', admin);
+    
+    app.get("*" , (req,res) =>{
+
+        res.render('404')
+    })
 
 //Outros
 const port = 3000

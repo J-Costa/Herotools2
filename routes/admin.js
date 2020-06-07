@@ -14,6 +14,10 @@ const Aluguel = mongoose.model('Aluguel')
 
 //rota principal, tem que ser o index
 router.get('/', (req,res)=>{
+    res.render("index")
+})
+
+router.get('/', (req,res)=>{
     res.render("admin/index")
 })
 
@@ -290,6 +294,9 @@ router.get('/', (req,res)=>{
         })
 //} fim aluguel
 
-
+//404
+router.get("*", (req, res) => {
+    res.render("404")
+})
 //exportacao das rotas
 module.exports = router
