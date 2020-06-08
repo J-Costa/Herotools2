@@ -91,14 +91,14 @@
     
     app.use('/admin', admin);
     
+    //rota para página nao encontrada
     app.get("*" , (req,res) =>{
-
         res.render('404')
     })
 
 //Outros
 const port = 3000
 app.listen(port, () =>{
-    console.log('servidor rodando');
+    console.log('Servidor rodando na porta: ' + port);
 });
 

@@ -17,9 +17,9 @@ router.get('/', (req,res)=>{
     res.render("index")
 })
 
-router.get('/', (req,res)=>{
-    res.render("admin/index")
-})
+// router.get('/', (req,res)=>{
+//     res.render("admin/index")
+// })
 
 //Rota usuarios {
     //view adiciona usuario
@@ -32,7 +32,7 @@ router.get('/', (req,res)=>{
         Usuario.find({}).lean().then((usuario)=>{
             res.render("admin/usuarios", {usuario: usuario})
         }).catch((err) =>{
-            console.log("erro:" +err)
+            req.flash("error_msg" ,  "erro:" +err)
             res.redirect('/admin')
         })
     })
@@ -105,10 +105,10 @@ router.get('/', (req,res)=>{
             celular: req.body.celular
         }
         new Usuario (novoUsuario).save().then(()=>{
-            console.log('Usuario salvo com sucesso')
+            req.flash("success_msg", 'Usuário salvo com sucesso!')
             res.redirect('/admin/usuarios')
         }).catch((err) => {
-            console.log('Erro ao salvar usuario: ' + err)
+            req.flash("error_msg",'Erro ao salvar usuário: ' + err)
         })
     })
 
@@ -120,7 +120,7 @@ router.get('/', (req,res)=>{
             Ferramenta.find({}).lean().then((ferramenta)=>{
                 res.render("admin/ferramentas", {ferramenta: ferramenta})
             }).catch((err) =>{
-                console.log("erro:" +err)
+                req.flash("error_msg", "Erro:" +err)
                 res.redirect('/admin')
             })
         })
@@ -181,10 +181,10 @@ router.get('/', (req,res)=>{
 
             }
             new Ferramenta (novaFerramenta).save().then(()=>{
-                console.log('ferramenta salva com sucesso')
+                req.flash("success_msg",'Ferramenta salva com sucesso!')
                 res.redirect('/admin/ferramentas')
             }).catch((err) => {
-                console.log('Erro ao salvar ferramenta: ' + err)
+                req.flash("error_msg", "Erro ao salvar ferramenta: " + err)
             })
         })
 //} fim ferramentas
@@ -195,7 +195,7 @@ router.get('/', (req,res)=>{
         Aluguel.find({}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
             res.render("admin/aluguel", {aluguel: aluguel})
         }).catch((err) =>{
-            console.log("erro:" +err)
+            req.flash("error_msg", "erro:" +err)
             res.redirect('/admin')
         })
     })
@@ -275,10 +275,10 @@ router.get('/', (req,res)=>{
 
         }
         new Aluguel (novoAluguel).save().then(()=>{
-            console.log('Aluguel salva com sucesso')
+            req.flash("success_msg", 'Aluguel salva com sucesso')
             res.redirect('/admin/aluguel')
         }).catch((err) => {
-            console.log('Erro ao salvar aluguel: ' + err)
+            req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
         })
     })
 
@@ -287,9 +287,10 @@ router.get('/', (req,res)=>{
             Usuario.find({}).lean().then((usuario) => {
                 Ferramenta.find({}).lean().then((ferramenta) =>{
                     res.render("admin/addaluguel", {ferramenta: ferramenta, usuario: usuario})
+                    req.flash("success_msg", "Aluguel adicionado com sucesso!")
                 })
                 }).catch((err) => {
-                    console.log("erro ao exibir: " + err)
+                    req.flash("error_msg", "erro ao exibir: " + err)
             })
         })
 //} fim aluguel
@@ -298,5 +299,6 @@ router.get('/', (req,res)=>{
 router.get("*", (req, res) => {
     res.render("404")
 })
+
 //exportacao das rotas
 module.exports = router
