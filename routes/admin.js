@@ -11,7 +11,6 @@ const Aluguel = mongoose.model('Aluguel')
 
 //TODO: inserir validações em todos os saves
 
-
 //rota principal, tem que ser o index
 router.get('/', (req,res)=>{
     res.render("index")
