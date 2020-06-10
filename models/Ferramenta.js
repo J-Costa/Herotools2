@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 
 const FerramentaSchema = mongoose.Schema({ 
-   ferramenta: {
+   ferramenta: { //endereço da imagem como teste
        type: String,
        required: true
    },
    tipo: {
         type: String,
-        required: true
+    required: true
     },
    modelo: {
        type: String,
