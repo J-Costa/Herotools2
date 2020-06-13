@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 const UsuarioSchema = mongoose.Schema({ 
    tipo: {
        type: String,
-       required: true
+       required: true, 
+       default: "user"
    },
    email: {
         type: String,

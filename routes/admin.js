@@ -7,12 +7,13 @@ require('../models/Usuario')
 const Usuario = mongoose.model('Usuario')
 require('../models/Aluguel')
 const Aluguel = mongoose.model('Aluguel')
-
+const bcrypt = require("bcryptjs")
+const {eAdmin} = require("../helpers/eAdmin")
 
 //TODO: inserir validações em todos os saves
 
 //rota principal, tem que ser o index
-router.get('/', (req,res)=>{
+router.get('/', eAdmin, (req,res)=>{
     res.render("index")
 })
 
@@ -22,12 +23,12 @@ router.get('/', (req,res)=>{
 
 //Rota usuarios {
     //view adiciona usuario
-    router.get('/usuarios/add', (req,res)=>{
+    router.get('/usuarios/add', eAdmin, (req,res)=>{
         res.render('admin/addusuarios')
     })
     
     //rota lista usuarios
-    router.get('/usuarios', (req,res)=>{
+    router.get('/usuarios', eAdmin, (req,res)=>{
         Usuario.find({}).lean().then((usuario)=>{
             res.render("admin/usuarios", {usuario: usuario})
         }).catch((err) =>{
@@ -37,7 +38,7 @@ router.get('/', (req,res)=>{
     })
 
     //rota deletar usuario
-    router.post("/usuarios/deletar", (req, res) => {
+    router.post("/usuarios/deletar", eAdmin, (req, res) => {
         Usuario.deleteOne({_id: req.body.id}).then(() =>{
             req.flash("success_msg", "Usuario deletado!")
             res.redirect("/admin/usuarios")
@@ -48,7 +49,7 @@ router.get('/', (req,res)=>{
     })
 
     //rota editar usuarios
-    router.get("/usuarios/edit/:id", (req, res) => {
+    router.get("/usuarios/edit/:id", eAdmin, (req, res) => {
         Usuario.findOne({_id:req.params.id}).lean().then((usuario) => {
         res.render("admin/editusuario", {usuario: usuario}) 
         }).catch((err) => {
@@ -58,7 +59,7 @@ router.get('/', (req,res)=>{
     }) 
 
     //edita usuarios no bando 
-    router.post("/usuarios/edit" , (req,res) => {
+    router.post("/usuarios/edit" , eAdmin, (req,res) => {
 
         Usuario.findOne({_id: req.body.id}).then((usuario) => {
             usuario.tipo = req.body.tipo
@@ -88,7 +89,7 @@ router.get('/', (req,res)=>{
     })
 
     //rota salva usuarios no banco
-    router.post('/usuarios/new', (req,res) =>{
+    router.post('/usuarios/new', eAdmin, (req,res) =>{
         const novoUsuario = {
             tipo: req.body.tipo,
             senha: req.body.senha,
@@ -103,19 +104,38 @@ router.get('/', (req,res)=>{
             telefone: req.body.telefone,
             celular: req.body.celular
         }
-        new Usuario (novoUsuario).save().then(()=>{
-            req.flash("success_msg", 'Usuário salvo com sucesso!')
-            res.redirect('/admin/usuarios')
-        }).catch((err) => {
-            req.flash("error_msg",'Erro ao salvar usuário: ' + err)
+
+        bcrypt.genSalt(10, (erro, salt)=>{
+            bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
+                if(erro){
+                    req.flash("error_msg", "Houve um erro durante o salvamento do usuário")
+                    res.redirect("/")
+                }else{
+                    novoUsuario.senha = hash
+                    new Usuario (novoUsuario).save().then(() =>{
+                        req.flash("success_msg", "Usuário salvo com sucesso!")
+                        res.redirect("/")
+                    }).catch((err) =>{
+                        req.flash("error_msg", "Houve um erro ao criar o usuário, tente novamente " +err)
+                        res.redirect("admin/")
+                    })
+                }
+            })
         })
+
+        // new Usuario (novoUsuario).save().then(()=>{
+        //     req.flash("success_msg", 'Usuário salvo com sucesso!')
+        //     res.redirect('/admin/usuarios')
+        // }).catch((err) => {
+        //     req.flash("error_msg",'Erro ao salvar usuário: ' + err)
+        // })
     })
 
 //} fim usuários
 
 //rotas ferramentas {
     //rota lista ferramentas
-        router.get('/ferramentas', (req,res)=>{
+        router.get('/ferramentas', eAdmin, (req,res)=>{
             Ferramenta.find({}).lean().then((ferramenta)=>{
                 res.render("admin/ferramentas", {ferramenta: ferramenta})
             }).catch((err) =>{
@@ -125,12 +145,12 @@ router.get('/', (req,res)=>{
         })
     
     //rota adiociona ferramenta
-        router.get('/ferramentas/add', (req,res)=>{
+        router.get('/ferramentas/add', eAdmin, (req,res)=>{
             res.render('admin/addferramenta')
         })
     
     //rota editar ferramenta
-        router.get("/ferramentas/edit/:id", (req, res) => {
+        router.get("/ferramentas/edit/:id", eAdmin, (req, res) => {
             Ferramenta.findOne({_id:req.params.id}).lean().then((ferramenta) => {
             res.render("admin/editferramenta", {ferramenta: ferramenta}) 
             }).catch((err) => {
@@ -140,7 +160,7 @@ router.get('/', (req,res)=>{
         }) 
 
     //edita ferramenta no bando 
-        router.post("/ferramentas/edit" , (req,res) => {
+        router.post("/ferramentas/edit" , eAdmin, (req,res) => {
 
             Ferramenta.findOne({_id: req.body.id}).then((ferramenta) => {
                 ferramenta.ferramenta = req.body.ferramenta
@@ -161,7 +181,7 @@ router.get('/', (req,res)=>{
             })
         })
     //rota deletar ferramenta
-        router.post("/ferramentas/deletar", (req, res) => {
+        router.post("/ferramentas/deletar", eAdmin, (req, res) => {
             Ferramenta.deleteOne({_id: req.body.id}).then(() =>{
                 req.flash("success_msg", "Ferramenta deletada!")
                 res.redirect("/admin/ferramentas")
@@ -171,7 +191,7 @@ router.get('/', (req,res)=>{
             })
         })
     //rota salva ferramenta no banco
-        router.post('/ferramentas/new', (req,res) =>{
+        router.post('/ferramentas/new', eAdmin, (req,res) =>{
             const novaFerramenta = {
                 ferramenta: req.body.ferramenta,
                 tipo: req.body.tipo,
@@ -190,7 +210,7 @@ router.get('/', (req,res)=>{
 
 //rotas aluguel {
     //rota lista aluguel
-    router.get('/aluguel', (req,res)=>{
+    router.get('/aluguel', eAdmin, (req,res)=>{
         Aluguel.find({}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
             res.render("admin/aluguel", {aluguel: aluguel})
         }).catch((err) =>{
@@ -201,7 +221,7 @@ router.get('/', (req,res)=>{
     
      
     // edita aluguel
-    router.get("/aluguel/edit/:id", (req, res) => {
+    router.get("/aluguel/edit/:id", eAdmin, (req, res) => {
         Aluguel.findOne({_id:req.params.id}).lean().then((aluguels) => {
             Usuario.find({}).lean().then((usuarios) => {
                 Ferramenta.find({}).lean().then((ferramentas)=>{
@@ -232,7 +252,7 @@ router.get('/', (req,res)=>{
     
 
     // editar aluguel no banco
-    router.post("/aluguel/edit" , (req,res) => {
+    router.post("/aluguel/edit" , eAdmin, (req,res) => {
 
         Aluguel.findOne({_id: req.body.id}).then((aluguel) => {
             aluguel.idCliente = req.body.usuario
@@ -254,7 +274,7 @@ router.get('/', (req,res)=>{
     })
 
     //rota deletar aluguel
-    router.post("/aluguel/deletar", (req, res) => {
+    router.post("/aluguel/deletar", eAdmin, (req, res) => {
         Aluguel.deleteOne({_id: req.body.id}).then(() =>{
             req.flash("success_msg", "aluguel deletado!")
             res.redirect("/admin/aluguel")
@@ -265,7 +285,7 @@ router.get('/', (req,res)=>{
     })
 
     //salva aluguel     
-    router.post('/aluguel/new', (req,res) =>{
+    router.post('/aluguel/new', eAdmin, (req,res) =>{
         const novoAluguel = {
             idFerramenta: req.body.ferramenta,
             idCliente: req.body.usuario,

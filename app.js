@@ -10,7 +10,9 @@
     const flash = require('connect-flash')
     require('./models/Ferramenta')
     const Ferramenta = mongoose.model('Ferramenta')
-
+    const usuarios = require('./routes/usuario');
+    const passport = require("passport")
+    require("./config/auth")(passport)
     
 
 //Configurações
@@ -20,11 +22,18 @@
             resave: true,
             saveUninitialized: true
         }))
+        app.use(passport.initialize())
+        app.use(passport.session())
         app.use(flash())
+
     //Middleware
         app.use((req, res, next) => {
             res.locals.success_msg = req.flash('success_msg')
             res.locals.error_msg = req.flash('error_msg')
+            res.locals.error = req.flash("error")
+            if(req.user){
+            res.locals.user = req.user.toObject() || null;
+            }
             next()
         })
     //Body parser
@@ -54,6 +63,14 @@
                 },
                 json: (context) =>{
                     return JSON.stringify(context);
+                },
+
+                ifvalue: function(conditional, options) {
+                    if (conditional == options.hash.equals) {
+                        return options.fn(this);
+                    } else {
+                        return options.inverse(this);
+                    }
                 }
                     
             }
@@ -76,20 +93,16 @@
     //Public arquivos estáticos
         app.use(express.static(path.join(__dirname, 'public')));
 
-    //middleware
-        app.use((req, res, next) => {
-            next();
-        })
-        
 //Rotas
     //pagina principal, carrega ferramentas
     app.get("/" , (req,res) => {
-        Ferramenta.find({}).lean().then((ferramentas) => {
-        res.render('index', {ferramentas: ferramentas})
+        Ferramenta.find({}).lean().then((ferramenta) => {
+        res.render('index', {ferramenta: ferramenta})
         })
     })
     
     app.use('/admin', admin);
+    app.use("/usuarios", usuarios)
     
     //rota para página nao encontrada
     app.get("*" , (req,res) =>{
