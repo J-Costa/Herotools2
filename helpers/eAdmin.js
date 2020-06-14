@@ -4,7 +4,7 @@ module.exports = {
             return next()
         }
 
-        req.flash("error_msg", "Você precisa estar logado!")
+        req.flash("error_msg", "Seu perfil não possui permissão")
         res.redirect("/")
     }
 }

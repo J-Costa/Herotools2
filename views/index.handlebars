@@ -1,6 +1,6 @@
 <h1 class="mt-4">Bem-vindo à Hero Tools!</h1>
 
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+{{!-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
     <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -25,7 +25,7 @@
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="sr-only">Next</span>
   </a>
-</div>
+</div> --}}
 
 <div class="row">
 {{#each ferramenta}}
@@ -35,7 +35,7 @@
                     <div class="card-body ">
                         <h5 class="card-title">{{modelo}}</h5>
                             <p class="card-text">{{tipo}}</p>
-                                <a href="#" class=" btn btn-primary float-right ">Alugar</a>
+                                <a href="usuarios/alugar/{{_id}}" class=" btn btn-primary float-right ">Alugar</a>
                     </div>
             </div>
   </div>

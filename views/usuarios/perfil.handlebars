@@ -1,0 +1,18 @@
+<h1>Meu perfil </h1> 
+{{#each aluguel}}
+    <div class="card mt-4">
+        <div class="card-body mt-2">
+            <h6>Modelo: {{idFerramenta.modelo}} </h6>
+            <br>
+            <small>Nome cliente: {{idCliente.nome}}</small>
+            <br>
+            <small>Data retirada: {{dateFormat dataRetirada}}</small>
+            <br>
+            <small>Data devolução: {{dateFormat dataDevolucao}}</small>
+            <br>
+            </form>
+        </div>
+    </div>
+{{else}}
+
+{{/each}}

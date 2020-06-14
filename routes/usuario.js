@@ -1,10 +1,16 @@
+// imports necessários
 const express = require('express')
 const router = express.Router()
-const mongoose = require('../models/Usuario')
-const Usuario = mongoose.model("Usuario")
 const bcrypt = require("bcryptjs")
 const passport = require("passport")
+//debug
 require("locus")
+
+//meus imports
+const mongoose = require('../models/Usuario')
+const Usuario = mongoose.model("Usuario")
+const Ferramenta = require('../models/Ferramenta')
+const Aluguel = require('../models/Aluguel')
 
 //rota de registro de usuario
 router.get("/registro", (req, res) => {
@@ -15,7 +21,7 @@ router.get("/registro", (req, res) => {
 router.post("/registro", (req, res) => {
 
     var erros = []
-
+    //validações
     if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
         erros.push({texto: "Nome inválido!"})
     }
@@ -27,7 +33,7 @@ router.post("/registro", (req, res) => {
     if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null ){
         erros.push({texto: "Senha inválida!"})
     }
-
+    //FIXME: nao está validando o tamanho da senha
     if( req.body.senha < 4 ){
         erros.push({texto: "Senha muito curta, ela deve conter no mínimo 6 caracteres!"})
     }
@@ -115,6 +121,43 @@ router.post("/login" , (req,res, next) => {
         failureRedirect: "/usuarios/login",
         failureFlash: true
     })(req, res, next )
+})
+
+//rota direciona para aluguel com usuario e ferramenta definida 
+router.get("/alugar/:id", (req, res) => {
+    Ferramenta.findOne({_id: req.params.id}).lean().then((ferramenta) => {
+    res.render("usuarios/alugar", {ferramenta: ferramenta})
+    }).catch((err) =>{
+        req.flash("error_msg", "Erro:" +err)
+        res.redirect('/')
+    })
+})
+
+//rota para o perfil
+router.get("/perfil", (req,res) => {
+    Aluguel.find({idCliente: req.user.id}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
+    res.render("usuarios/perfil", {aluguel: aluguel})
+    }).catch((err) =>{
+        req.flash("error_msg", "Erro:" +err)
+        res.redirect('/')
+    })
+})
+
+//rota adiciona aluguel
+router.post('/alugar/new', (req,res) =>{
+    const novoAluguel = {
+        idFerramenta: req.body.ferramenta,
+        idCliente: req.body.usuario,
+        dataRetirada: req.body.dataRetirada,
+        dataDevolucao: req.body.dataDevolucao
+
+    }
+    new Aluguel (novoAluguel).save().then(()=>{
+        req.flash("success_msg", 'Aluguel salvo com sucesso')
+        res.redirect('/')
+    }).catch((err) => {
+        req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
+    })
 })
 
 module.exports = router

@@ -1,0 +1,23 @@
+<div class="card">
+    <div class="card-body">
+        <form action="/usuarios/alugar/new" method="POST">
+            <label for="ferramenta"> Usuario:</label>
+            <select name="usuario" class='custom-select'>
+                    <option value="{{user._id}}" >{{user.nome}}</option>
+            </select> 
+
+            <label for="ferramenta"> Ferramenta</label>
+            <select name="ferramenta" class='custom-select'>
+                    <option value="{{ferramenta._id}}" >{{ferramenta.modelo}}</option>
+            </select> 
+
+            <label for="dataRetirada">Data de retirada: </label>
+            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control">
+
+            <label for="dataDevolucao"> Data de devolução: </label>
+            <input type="datetime" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control">
+            <br>
+            <button type="submit" class="btn btn-success">Salvar aluguel</button>
+        </form>
+    </div>
+</div>
