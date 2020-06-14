@@ -33,8 +33,7 @@ router.post("/registro", (req, res) => {
     if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null ){
         erros.push({texto: "Senha inválida!"})
     }
-    //FIXME: nao está validando o tamanho da senha
-    if( req.body.senha < 4 ){
+    if( req.body.senha.length < 6 ){
         erros.push({texto: "Senha muito curta, ela deve conter no mínimo 6 caracteres!"})
     }
 

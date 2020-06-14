@@ -1,5 +1,9 @@
-<h1 class="mt-4">Bem-vindo à Hero Tools!</h1>
+{{#if user}}
+<h1 class="mt-4">Olá, {{user.nome}}!</h1>
 
+{{else}}
+<h1 class="mt-4">Bem-vindo à Hero Tools!</h1>
+{{/if}}
 {{!-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -30,7 +34,7 @@
 <div class="row">
 {{#each ferramenta}}
     <div class="card col-sm-3 mt-2">
-     <div class="card-body clearfix"> 
+     <div class="card-body "> 
                 <img src="{{ferramenta}}" class="card-img-top " alt="...">
                     <div class="card-body ">
                         <h5 class="card-title">{{modelo}}</h5>
