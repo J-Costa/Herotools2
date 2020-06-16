@@ -20,11 +20,19 @@
                 {{/each}}
             </select> 
 
-            <label for="dataRetirada">Data de retirada: </label>
-            <input type="datetime" id="dataRetirada" name="dataRetirada" placeholder="xx/xx/xxxx" class="form-control">
+             <div class="row mt-4">
+                    <div class="col-sm">
+                        <label for="date">Data de retirada:</label>
+                        <br>
+                        <input type="date" id="dataretirada" name="dataRetirada">
+                    </div>
 
-            <label for="dataDevolucao"> Data de devolução: </label>
-            <input type="datetime" name="dataDevolucao" id="dataDevolucao" placeholder="xx/xx/xxxx" class="form-control">
+                    <div class="col-sm">
+                        <label for="date">Data de devolução:</label>
+                        <br>
+                        <input type="date" id="datadevolucao" name="dataDevolucao">
+                    </div>
+                </div>
             <br>
             <button type="submit" class="btn btn-success">Salvar aluguel</button>
         </form>

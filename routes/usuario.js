@@ -122,7 +122,9 @@ router.post("/login" , (req,res, next) => {
     })(req, res, next )
 })
 
-//rota direciona para aluguel com usuario e ferramenta definida 
+//rota direciona para aluguel com usuario e ferramenta definida
+//FIXME: validar data de entrada, nao podera ser menor que data atual
+//talvez definir periodos de aluguem em periodos  
 router.get("/alugar/:id", (req, res) => {
     Ferramenta.findOne({_id: req.params.id}).lean().then((ferramenta) => {
     res.render("usuarios/alugar", {ferramenta: ferramenta})
@@ -147,6 +149,42 @@ router.get("/meuperfil" , (req, res) => {
     res.render("usuarios/meuperfil")
 })
 
+//rota para usuario editar seu perfil
+//FIXME: adicionar validações
+router.post("/edit" , (req,res,next) =>{
+    Usuario.findOne({_id: req.user.id}).then((usuario) => {
+        usuario.senha = req.body.senha
+        usuario.email = req.body.email
+        usuario.nome = req.body.nome
+        usuario.sexo = req.body.sexo
+        usuario.rg = req.body.rg
+        usuario.cpf = req.body.cpf
+        usuario.cep = req.body.cep
+        usuario.endereco = req.body.endereco
+        usuario.bairro = req.body.bairro
+        usuario.telefone = req.body.telefone
+        usuario.celular = req.body.celular
+
+        bcrypt.genSalt(10, (erro, salt)=>{
+            bcrypt.hash(usuario.senha, salt, (erro, hash) => {
+                if(erro){
+                    req.flash("error_msg", "Houve um erro durante o salvamento do usuário")
+                    res.redirect("/")
+                }else{
+                    usuario.senha = hash
+                    new Usuario (usuario).save().then(() =>{
+                        req.flash("success_msg", "Usuário salvo com sucesso!")
+                        res.redirect("/")
+                    }).catch((err) =>{
+                        req.flash("error_msg", "Houve um erro ao editar o usuário, tente novamente " + err)
+                        res.redirect("admin/")
+                    })
+                }
+            })
+        })
+    })    
+})
+
 //rota para meu perfil
 router.get("/meusalugueis" , (req, res) => {
     Aluguel.find({idCliente: req.user.id}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
@@ -158,7 +196,7 @@ router.get("/meusalugueis" , (req, res) => {
 })
 
 //TODO: rota para meus ferramentas
-// precisa mudar o model de ferramenta para identificar o proprietario. 
+//FIXME: precisa mudar o model de ferramenta para identificar o proprietario. 
 // Se for o caso
 // router.get("/minhasferramentas" , (req, res) => {
 //     res.render("usuarios/minhasferramentas")
@@ -166,6 +204,7 @@ router.get("/meusalugueis" , (req, res) => {
 
 
 //rota adiciona aluguel
+//FIXME: validar data de aluguel, adicionar tratativa de erro e redirecionar para aluguel com mensagem
 router.post('/alugar/new', (req,res) =>{
     const novoAluguel = {
         idFerramenta: req.body.ferramenta,

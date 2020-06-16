@@ -58,7 +58,8 @@ router.get('/', eAdmin, (req,res)=>{
         })
     }) 
 
-    //edita usuarios no bando 
+    //edita usuarios no bando
+    //FIXME: adicionar validações  
     router.post("/usuarios/edit" , eAdmin, (req,res) => {
 
         Usuario.findOne({_id: req.body.id}).then((usuario) => {
@@ -75,16 +76,23 @@ router.get('/', eAdmin, (req,res)=>{
             usuario.telefone = req.body.telefone
             usuario.celular = req.body.celular
 
-            usuario.save().then(() =>{
-                req.flash("success_msg", "Usuario editado!")
-                res.redirect("/admin/usuarios")
-            }).catch((err) => {
-                req.flash("error_msg", "01 - Erro ao salvar edicao! " + err)
-                res.redirect("/admin/usuarios")
+            bcrypt.genSalt(10, (erro, salt)=>{
+                bcrypt.hash(usuario.senha, salt, (erro, hash) => {
+                    if(erro){
+                        req.flash("error_msg", "Houve um erro durante o salvamento do usuário")
+                        res.redirect("/")
+                    }else{
+                        usuario.senha = hash
+                        new Usuario (usuario).save().then(() =>{
+                            req.flash("success_msg", "Usuário salvo com sucesso!")
+                            res.redirect("/")
+                        }).catch((err) =>{
+                            req.flash("error_msg", "Houve um erro ao editar o usuário, tente novamente " + err)
+                            res.redirect("admin/")
+                        })
+                    }
+                })
             })
-        }).catch((err) => {
-            req.flash("error_msg", "02 - Erro ao editar! " + err)
-            res.redirect("/admin/usuarios")
         })
     })
 
