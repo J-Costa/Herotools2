@@ -142,6 +142,29 @@ router.get("/perfil", (req,res) => {
     })
 })
 
+//rota para meu perfil
+router.get("/meuperfil" , (req, res) => {
+    res.render("usuarios/meuperfil")
+})
+
+//rota para meu perfil
+router.get("/meusalugueis" , (req, res) => {
+    Aluguel.find({idCliente: req.user.id}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
+        res.render("usuarios/meusalugueis", {aluguel: aluguel})
+        }).catch((err) =>{
+            req.flash("error_msg", "Erro:" +err)
+            res.redirect('/')
+        })
+})
+
+//TODO: rota para meus ferramentas
+// precisa mudar o model de ferramenta para identificar o proprietario. 
+// Se for o caso
+// router.get("/minhasferramentas" , (req, res) => {
+//     res.render("usuarios/minhasferramentas")
+// })
+
+
 //rota adiciona aluguel
 router.post('/alugar/new', (req,res) =>{
     const novoAluguel = {
@@ -158,5 +181,7 @@ router.post('/alugar/new', (req,res) =>{
         req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
     })
 })
+
+
 
 module.exports = router

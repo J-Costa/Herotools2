@@ -2,12 +2,12 @@
     <div class="card-body">
         <form action="/usuarios/alugar/new" method="POST">
             <label for="ferramenta"> Usuario:</label>
-            <select name="usuario" class='custom-select'>
+            <select name="usuario" class='custom-select' >
                     <option value="{{user._id}}" >{{user.nome}}</option>
             </select> 
 
-            <label for="ferramenta"> Ferramenta</label>
-            <select name="ferramenta" class='custom-select'>
+            <label for="ferramenta" > Ferramenta</label>
+            <select name="ferramenta" class='custom-select' >
                     <option value="{{ferramenta._id}}" >{{ferramenta.modelo}}</option>
             </select> 
 

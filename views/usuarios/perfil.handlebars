@@ -1,18 +1,12 @@
-<h1>Meu perfil </h1> 
-{{#each aluguel}}
-    <div class="card mt-4">
-        <div class="card-body mt-2">
-            <h6>Modelo: {{idFerramenta.modelo}} </h6>
-            <br>
-            <small>Nome cliente: {{idCliente.nome}}</small>
-            <br>
-            <small>Data retirada: {{dateFormat dataRetirada}}</small>
-            <br>
-            <small>Data devolução: {{dateFormat dataDevolucao}}</small>
-            <br>
-            </form>
-        </div>
-    </div>
-{{else}}
+<h4>Perfil de {{user.nome}}.</h4>
 
-{{/each}}
+<div class="card">
+    <div class="card-body">
+        <a href="/usuarios/meuperfil"><h5>Editar meu perfil</h5></a>
+        <hr>
+        <a href="/usuarios/meusalugueis"><h5>Meus aluguéis</h5> </a>
+        {{!--TODO: precisar mudar o model para mostrar ferramentas --}}
+        {{!-- <hr>
+        <a href="/usuarios/minhasferramentas"><h5>Minhas ferramentas</h5></a> --}}
+    </div>
+</div>
