@@ -7,36 +7,36 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
     {{#if user }}
       {{#ifvalue user.tipo equals="admin"}}
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-tools"></i> 
           Ferrramentas
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/admin/ferramentas">Listar</a>
-          <a class="dropdown-item" href="/admin/ferramentas/add">Cadastrar</a>
+          <a class="dropdown-item" href="/admin/ferramentas"><i class="fas fa-list-alt"></i> Listar</a>
+          <a class="dropdown-item" href="/admin/ferramentas/add"><i class="fas fa-plus-square"></i> Cadastrar</a>
           
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-users"></i> 
           Usuários
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/admin/usuarios">Listar</a>
-          <a class="dropdown-item" href="/admin/usuarios/add">Cadastrar</a>
+          <a class="dropdown-item" href="/admin/usuarios"><i class="fas fa-list-alt"></i> Listar</a>
+          <a class="dropdown-item" href="/admin/usuarios/add"><i class="fas fa-plus-square"></i> Cadastrar</a>
           
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-truck-moving"></i> 
           Aluguéis
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/admin/aluguel">Listar</a>
-          <a class="dropdown-item" href="/admin/aluguel/add">Cadastrar</a>
+          <a class="dropdown-item" href="/admin/aluguel"><i class="fas fa-list-alt"></i> Listar</a>
+          <a class="dropdown-item" href="/admin/aluguel/add"><i class="fas fa-plus-square"></i> Cadastrar</a>
           
         </div>
       </li>
@@ -45,28 +45,28 @@
       {{/if}}
       {{#if user}}
            <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle"></i> 
           {{user.nome}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/usuarios/perfil">Meu perfil</a>
-          <a class="dropdown-item" href="/usuarios/logout">Sair</a>
+          <a class="dropdown-item" href="/usuarios/perfil"><i class="fas fa-user"></i> Meu perfil</a>
+          <a class="dropdown-item" href="/usuarios/logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
           
         </div>
       </li>
       {{else}}
           <li class="nav-item active">
-            <a class="nav-link" href="/usuarios/login">Login <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/usuarios/login"><i class="fas fa-sign-in-alt"></i> Login <span class="sr-only">(current)</span></a>
           <li class="nav-item dropdown">
             <li class="nav-item active">
-              <a class="nav-link" href="/usuarios/registro">Registro <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/usuarios/registro"><i class="fas fa-user-plus"></i> Registro <span class="sr-only">(current)</span></a>
             <li class="nav-item dropdown">
 
       {{/if}}
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2" type="search" placeholder="Pesquisar" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Pesquisar</button>
     </form>
   </div>
 </nav>
