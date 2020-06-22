@@ -33,6 +33,7 @@
             res.locals.error = req.flash("error")
             if(req.user){
             res.locals.user = req.user.toObject() || null;
+            res.locals.session = req.session
             }
             next()
         })
@@ -47,6 +48,20 @@
             //Helper customizados
             helpers: {
                 //formatar data
+                dateFormat2: (data) =>{
+                    data = new Date(data)
+                    var dia = data.getDate()
+                    var mes = (data.getMonth()+1)
+                    var ano = data.getFullYear()
+                    if(dia <= 9){
+                        dia = "0" + dia
+                    }
+
+                    if(mes <= 9){
+                        mes = "0" + mes
+                    }
+                    return ano +"-"+ mes +"-"+ dia //retorna "AAA-MM-DD"
+                },
                 dateFormat: (data) =>{
                     data = new Date(data)
                     var dia = data.getDate()
@@ -59,7 +74,7 @@
                     if(mes <= 9){
                         mes = "0" + mes
                     }
-                    return dia +"/"+ mes +"/"+ ano //TODO: se ordem de salvamento está correta
+                    return dia +"/"+ mes +"/"+ ano //retorna "DD-MM-AAAA"
                 },
                 json: (context) =>{
                     return JSON.stringify(context);
@@ -105,9 +120,9 @@
     app.use("/usuarios", usuarios)
     
     //rota para página nao encontrada
-    app.get("*" , (req,res) =>{
-        res.render('404')
-    })
+    // app.get("*" , (req,res) =>{
+    //     res.render('404')
+    // })
 
 //Outros
 const port = 3000

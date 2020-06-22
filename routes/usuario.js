@@ -11,6 +11,8 @@ const mongoose = require('../models/Usuario')
 const Usuario = mongoose.model("Usuario")
 const Ferramenta = require('../models/Ferramenta')
 const Aluguel = require('../models/Aluguel')
+const Carrinho = require("../models/carrinho")
+const {isLogado} = require("../helpers/isLogado")
 
 //rota de registro de usuario
 router.get("/registro", (req, res) => {
@@ -114,28 +116,23 @@ router.get("/logout", (req,res) => {
 
 
 //cira usuario logado
-router.post("/login" , (req,res, next) => {
-    passport.authenticate("local",{
-        successRedirect: "/" , 
+router.post("/login" ,  passport.authenticate("local",{
         failureRedirect: "/usuarios/login",
         failureFlash: true
-    })(req, res, next )
-})
-
-//rota direciona para aluguel com usuario e ferramenta definida
-//FIXME: validar data de entrada, nao podera ser menor que data atual
-//talvez definir periodos de aluguem em periodos  
-router.get("/alugar/:id", (req, res) => {
-    Ferramenta.findOne({_id: req.params.id}).lean().then((ferramenta) => {
-    res.render("usuarios/alugar", {ferramenta: ferramenta})
-    }).catch((err) =>{
-        req.flash("error_msg", "Erro:" +err)
-        res.redirect('/')
+    }), (req,res,next) => {
+        if(req.session.oldUrl){
+            var oldurl = req.session.oldUrl
+            req.session.oldUrl = null
+            res.redirect("/usuarios"+oldurl)
+        }else{
+            res.redirect("/")
+        }
     })
-})
+
+
 
 //rota para o perfil
-router.get("/perfil", (req,res) => {
+router.get("/perfil", isLogado,(req,res) => {
     Aluguel.find({idCliente: req.user.id}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
     res.render("usuarios/perfil", {aluguel: aluguel})
     }).catch((err) =>{
@@ -151,7 +148,7 @@ router.get("/meuperfil" , (req, res) => {
 
 //rota para usuario editar seu perfil
 //FIXME: adicionar validações
-router.post("/edit" , (req,res,next) =>{
+router.post("/edit" , isLogado, (req,res,next) =>{
     Usuario.findOne({_id: req.user.id}).then((usuario) => {
         usuario.senha = req.body.senha
         usuario.email = req.body.email
@@ -186,7 +183,7 @@ router.post("/edit" , (req,res,next) =>{
 })
 
 //rota para meu perfil
-router.get("/meusalugueis" , (req, res) => {
+router.get("/meusalugueis" , isLogado,(req, res) => {
     Aluguel.find({idCliente: req.user.id}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
         res.render("usuarios/meusalugueis", {aluguel: aluguel})
         }).catch((err) =>{
@@ -202,25 +199,85 @@ router.get("/meusalugueis" , (req, res) => {
 //     res.render("usuarios/minhasferramentas")
 // })
 
-
-//rota adiciona aluguel
-//FIXME: validar data de aluguel, adicionar tratativa de erro e redirecionar para aluguel com mensagem
-router.post('/alugar/new', (req,res) =>{
-    const novoAluguel = {
-        idFerramenta: req.body.ferramenta,
-        idCliente: req.body.usuario,
-        dataRetirada: req.body.dataRetirada,
-        dataDevolucao: req.body.dataDevolucao
-
-    }
-    new Aluguel (novoAluguel).save().then(()=>{
-        req.flash("success_msg", 'Aluguel salvo com sucesso')
+//rota direciona para aluguel com usuario e ferramenta definida
+//FIXME: validar data de entrada, nao podera ser menor que data atual
+//talvez definir periodos de aluguem em periodos  
+router.get("/alugar/:id", isLogado, (req, res) => {
+    Ferramenta.findOne({_id: req.params.id}).lean().then((ferramenta) => {
+    res.render("usuarios/alugar", {ferramenta: ferramenta , dataAtual: Date()})
+    }).catch((err) =>{
+        req.flash("error_msg", "Erro:" +err)
         res.redirect('/')
-    }).catch((err) => {
-        req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
     })
 })
 
+//rota adiciona aluguel
+//FIXME: validar data de aluguel, adicionar tratativa de erro e redirecionar para aluguel com mensagem
+router.post('/alugar/new', isLogado, (req,res) =>{
+    var ferramenta = Ferramenta.findOne({_id: req.params.id})
 
+        const novoAluguel = {
+            idFerramenta: req.body.ferramenta,
+            idCliente: req.body.usuario,
+            dataRetirada: req.body.dataRetirada,
+            dataDevolucao: req.body.dataDevolucao
+
+        }
+        new Aluguel (novoAluguel).save().then(()=>{
+            req.flash("success_msg", 'Aluguel salvo com sucesso')
+            res.redirect('/')
+        }).catch((err) => {
+            req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
+        })
+})
+
+
+//adicionar no carrinho
+router.get("/add/:id", (req, res, next) => {
+    var idProduto = req.params.id
+    var carrinho = new Carrinho(req.session.carrinho ? req.session.carrinho : {itens: {}})
+    Ferramenta.findById(idProduto).then((ferramenta) => {
+        carrinho.add(ferramenta, ferramenta.id)
+        req.session.carrinho = carrinho
+        res.redirect("/")
+    }).catch((err) =>{
+        res.redirect("/")
+        req.flash("error_msg" , "Erro ao adicionar no carrinho " + err )
+    })
+})
+
+//rota para view do carrinho 
+router.get("/carrinho", isLogado, (req,res) => {
+    if(!req.session.carrinho){
+        return res.render("usuarios/carrinho", {produtos : null})
+    }
+    var carrinho = new Carrinho(req.session.carrinho)
+    res.render("usuarios/carrinho", {produtos: carrinho.gerarArray(), totalDeItens: carrinho.totalQtd})
+})
+
+//remover 1 item do carrinho
+router.get("/removerum/:id" , (req,res,next) => {
+    var idProduto = req.params.id
+    var carrinho = new Carrinho(req.session.carrinho ? req.session.carrinho : {itens: {}})
+
+    carrinho.removerItem(idProduto)
+    req.session.carrinho =  carrinho
+    res.redirect("/usuarios/carrinho")
+})
+
+//remover 1 item do carrinho
+router.get("/removertodos/:id" , (req,res,next) => {
+    var idProduto = req.params.id
+    var carrinho = new Carrinho(req.session.carrinho ? req.session.carrinho : {itens: {}})
+
+    carrinho.removerTodos(idProduto)
+    req.session.carrinho =  carrinho
+    res.redirect("/usuarios/carrinho")
+})
+
+//rota para finalizar pedido
+router.get("/pedido" ,isLogado , (req,res) =>{
+    res.render("usuarios/pedido")
+})
 
 module.exports = router

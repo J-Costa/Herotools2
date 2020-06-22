@@ -1,3 +1,8 @@
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+
+{{/each}}
 <div class="card">
     <div class="card-body">
         <h4>Novo aluguel</h4>
@@ -16,13 +21,13 @@
                     <div class="col-sm">
                         <label for="date">Data de retirada:</label>
                         <br>
-                        <input type="date" id="dataretirada" name="dataRetirada">
+                        <input type="date" id="dataretirada" name="dataRetirada" min="{{dateFormat2 dataAtual}}"  value="{{dateFormat2 dataAtual}}">
                     </div>
 
                     <div class="col-sm">
                         <label for="date">Data de devolução:</label>
                         <br>
-                        <input type="date" id="datadevolucao" name="dataDevolucao">
+                        <input type="date" id="datadevolucao" name="dataDevolucao" min="{{dateFormat2 dataAtual}}">
                     </div>
                 </div>
        

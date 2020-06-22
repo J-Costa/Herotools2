@@ -1,0 +1,40 @@
+{{#if produtos}} 
+    {{#each produtos}}
+    
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3 ">
+                <ul class="list-group">
+                    <li class="list-group-item mt-2">
+                        <strong>{{this.item.modelo}}</strong>
+                        <span class="badge badge-dark ">X {{this.qtd}}  </span>
+                        <div class="btn-group float-right">
+                            <div class="dropdown">
+                                <a class="btn btn-secondary  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Remover
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="/usuarios/removerum/{{this.item._id}}">1 item</a>
+                                    <a class="dropdown-item" href="/usuarios/removertodos/{{this.item._id}}">Todos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {{/each}}
+        <br>
+        <h5>Total de itens: {{totalDeItens}}</h4>
+        <br>
+        <a href="/usuarios/pedido"> <button class="btn btn-success">Fazer pedido</button> </a>
+{{else}}
+      <div class="row">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3 ">
+            <h2>Carrinho vazio... </h2>
+            <br>    
+            <h3><a href="/">Escolher ferramentas</a></h3>
+        </div>
+      </div>
+{{/if}}
+ 

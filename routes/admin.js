@@ -1,14 +1,19 @@
+//imports necessarios
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const bcrypt = require("bcryptjs")
+
+//meus imports
 require('../models/Ferramenta')
 const Ferramenta = mongoose.model('Ferramenta')
 require('../models/Usuario')
 const Usuario = mongoose.model('Usuario')
 require('../models/Aluguel')
 const Aluguel = mongoose.model('Aluguel')
-const bcrypt = require("bcryptjs")
 const {eAdmin} = require("../helpers/eAdmin")
+
+
 
 //TODO: inserir validações em todos os saves
 
