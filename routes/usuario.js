@@ -214,13 +214,26 @@ router.get("/alugar/:id", isLogado, (req, res) => {
 //rota adiciona aluguel
 //FIXME: validar data de aluguel, adicionar tratativa de erro e redirecionar para aluguel com mensagem
 router.post('/alugar/new', isLogado, (req,res) =>{
-    var ferramenta = Ferramenta.findOne({_id: req.params.id})
+        function getDataReal (data){
+            data = new Date(data)
+            var dia = data.getDate()+2
+            var mes = (data.getMonth())+1
+            var ano = data.getFullYear()
+            if(dia <= 9){
+                dia = "0" + dia
+            }
+
+            if(mes <= 9){
+                mes = "0" + mes
+            }
+            return ano +"-"+ mes +"-"+ dia
+        }
 
         const novoAluguel = {
             idFerramenta: req.body.ferramenta,
             idCliente: req.body.usuario,
-            dataRetirada: req.body.dataRetirada,
-            dataDevolucao: req.body.dataDevolucao
+            dataRetirada:  getDataReal(req.body.dataRetirada),
+            dataDevolucao: getDataReal(req.body.dataDevolucao)
 
         }
         new Aluguel (novoAluguel).save().then(()=>{
@@ -247,7 +260,7 @@ router.get("/add/:id", (req, res, next) => {
 })
 
 //rota para view do carrinho 
-router.get("/carrinho", isLogado, (req,res) => {
+router.get("/carrinho",  (req,res) => {
     if(!req.session.carrinho){
         return res.render("usuarios/carrinho", {produtos : null})
     }
