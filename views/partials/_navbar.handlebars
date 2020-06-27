@@ -1,17 +1,22 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/">Hero Tools</a>
+<nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
+  <a class="navbar-brand h1 mb-0" href="/">
+  <img src="/img/logo/logo.png" alt="...">
+  </a>
+  
+  <a href="/usuarios/carrinho" class="btn btn-outline-light btn-sm align-middle  ml-auto mr-3 order-lg-last" > <i class="fas fa-shopping-cart"> </i>  Carrinho <span class="badge badge-pill  badge-light">{{session.carrinho.totalQtd}}</span></a>
+
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
+      
     {{#if user }}
       {{#ifvalue user.tipo equals="admin"}}
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-tools"></i> 
+      <li class="nav-item active   dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="fas fa-tools"></i> 
           Ferrramentas
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -20,7 +25,7 @@
           
         </div>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item active dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-users"></i> 
           Usuários
         </a>
@@ -30,7 +35,7 @@
           
         </div>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item active dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-truck-moving"></i> 
           Aluguéis
         </a>
@@ -44,7 +49,7 @@
       {{/ifvalue}}
       {{/if}}
       {{#if user}}
-           <li class="nav-item dropdown">
+           <li class="nav-item active dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle"></i> 
           {{user.nome}}
         </a>
@@ -64,6 +69,6 @@
 
       {{/if}}
     </ul>
-      <a href="/usuarios/carrinho" ><button class="btn btn-success my-2 my-sm-0" ><i class="fas fa-shopping-cart"></i> Carrinho <span class="badge badge-primary">{{session.carrinho.totalQtd}}</span></button></a>
+        
   </div>
 </nav>

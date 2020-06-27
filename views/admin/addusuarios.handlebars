@@ -3,7 +3,10 @@
     <div class="card-body">
         <form action="/admin/usuarios/new" method="POST">
             <label for="tipo">Tipo de usuário:</label>
-            <input type="text" id="tipo" name="tipo" placeholder="Tipo de usuário" class="form-control">
+            <select name="tipo" id="tipo" class="form-control">
+                <option value="admin">Admin</option>
+                <option value="user" selected>User</option>
+            </select>
 
             <label for="senha">Senha:</label>
             <input type="password" id="senha" name="senha" placeholder="senha" class="form-control">
@@ -18,8 +21,10 @@
             <input type="text" id="nome" name="nome" placeholder="Nome do usuário " class="form-control">
 
             <label for="sexo"> Sexo: </label>
-            <input type="sexo" name="sexo" id="sexo" placeholder="sexo" class="form-control">
-
+            <select name="sexo" id="sexo" class="form-control">
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+            </select>
             <label for="rg">RG:</label>
             <input type="number" name="rg" id="rg" placeholder="RG" class="form-control">
 

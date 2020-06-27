@@ -1,0 +1,53 @@
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+
+{{/each}}
+<h3>Novo usuário:</h3>
+<div class="card">
+    <div class="card-body">
+        <form action="" method="POST">
+            
+            <label  for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" placeholder="senha" class="form-control ">
+
+            <label class="mt-2" for="senha2">Repita a senha:</label>
+                <input type="password" id="senha2" name="senha2" placeholder="Repita a senha" class="form-control ">
+
+            <label class="mt-2" for="email">E-mail:</label>
+                <input type="email" id="email" name="email" placeholder="email@email.com" class="form-control">
+
+            <label class="mt-2" for="nome">Nome do usuário: </label>
+                <input type="text" id="nome" name="nome" placeholder="Nome do usuário " class="form-control">
+
+            <label class="mt-2" for="sexo"> Sexo: </label>
+                <select name="sexo" id="sexo" class="form-control">
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                </select>
+
+            <label class="mt-2" for="rg">RG:</label>
+                <input type="number" name="rg" id="rg" placeholder="RG" class="form-control">
+
+            <label class="mt-2" for="cpf">CPF:</label>
+                <input type="number" id="cpf" name="cpf" placeholder="CPF" class="form-control">
+
+            <label class="mt-2" for="cep">CEP:</label>
+                <input type="number" id="cep" name="cep" placeholder="cep" class="form-control">
+
+            <label class="mt-2" for="endereco">Endereço:</label>
+                <input type="text" id="endereco" name="endereco" placeholder="Endereço" class="form-control">
+
+            <label class="mt-2" for="bairro">Bairro:</label>
+                <input type="text" id="bairro" name="bairro" placeholder="Bairro" class="form-control">
+
+            <label class="mt-2" for="telefone">Telefone:</label>
+                <input type="number" id="telefone" name="telefone" placeholder="(xx) xxxx-xxxx" class="form-control">
+
+            <label class="mt-2" for="celular">Celular:</label>
+                <input type="number" id="celular" name="celular" placeholder="(xx) xxxxx-xxxx" class="form-control">
+            <br>
+                <button type="submit" class="btn btn-success">Criar conta</button>
+        </form>
+    </div>
+</div>

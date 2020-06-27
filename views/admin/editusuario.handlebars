@@ -19,7 +19,10 @@
             <input type="text" id="nome" name="nome" placeholder="Nome do usuário " class="form-control" value="{{usuario.nome}}">
 
             <label for="sexo"> Sexo: </label>
-            <input type="sexo" name="sexo" id="sexo" placeholder="sexo" class="form-control" value="{{usuario.sexo}}">
+            <select name="sexo" id="sexo" class="form-control">
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+            </select>
 
             <label for="rg">RG:</label>
             <input type="number" name="rg" id="rg" placeholder="RG" class="form-control" value="{{usuario.rg}}">

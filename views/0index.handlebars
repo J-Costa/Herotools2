@@ -1,0 +1,51 @@
+
+{{#if user}}
+<h1 class="mt-4">Olá, {{user.nome}}!</h1>
+
+{{else}}
+<h1 class="mt-4">Bem-vindo à Hero Tools!</h1>
+{{/if}}
+{{!-- <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-auto img-fluid" src="{{ferramenta.1.ferramenta}}" alt="Primeiro Slide">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-auto img-fluid" src="{{ferramenta.2.ferramenta}}" alt="Segundo Slide">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-auto img-fluid" src="{{ferramenta.3.ferramenta}}" alt="Terceiro Slide">
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Anterior</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Próximo</span>
+  </a>
+</div> --}}
+<div class="row">
+{{#each ferramenta}}
+  <div class="card col-sm-4 mt-2 ">
+    <div >
+     <div class="card-body "> 
+                <img src="{{ferramenta}}" class="card-img-top " alt="...">
+                    <div class="card-body ">
+                        <h5 class="card-title">{{modelo}}</h5>
+                            <p class="card-text text-muted">{{tipo}}</p>
+                                <a href="usuarios/add/{{_id}}" class=" btn btn-primary float-center  ">Adicionar ao carrinho</a>
+                                <a href="usuarios/alugar/{{_id}}" class=" btn btn-primary float-center mt-2">Alugar</a>
+                                
+                    </div>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+</div>

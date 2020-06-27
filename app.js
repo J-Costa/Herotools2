@@ -112,7 +112,7 @@
     //pagina principal, carrega ferramentas
     app.get("/" , (req,res) => {
         Ferramenta.find({}).lean().then((ferramenta) => {
-        res.render('index', {ferramenta: ferramenta})
+        res.render('index', {ferramenta: ferramenta, layout: 'main2'})
         })
     })
     
