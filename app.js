@@ -1,4 +1,5 @@
 //Carregando Módulos
+    //modulos necessarios
     const express= require('express');
     const handleBars= require('express-handlebars');
     const bodyParser= require('body-parser');
@@ -8,10 +9,12 @@
     const path = require('path')
     const session = require('express-session')
     const flash = require('connect-flash')
+    const passport = require("passport")
+
+    //meus modulos
     require('./models/Ferramenta')
     const Ferramenta = mongoose.model('Ferramenta')
     const usuarios = require('./routes/usuario');
-    const passport = require("passport")
     require("./config/auth")(passport)
     
 
@@ -50,31 +53,26 @@
                 //formatar data
                 dateFormat2: (data) =>{
                     data = new Date(data)
-                    var dia = data.getDate()
-                    var mes = (data.getMonth()+1)
                     var ano = data.getFullYear()
-                    if(dia <= 9){
-                        dia = "0" + dia
+                    var mes = data.getMonth()+1
+                    var dia = data.getDate()
+                    if (dia < 10){
+                        dia =  "0" + dia
                     }
-
-                    if(mes <= 9){
-                        mes = "0" + mes
+                    
+                    if (mes < 10){
+                        mes =  "0" + mes
                     }
-                    return ano +"-"+ mes +"-"+ dia //retorna "AAA-MM-DD"
+                    
+                    return ano +"-"+ mes +"-"+ dia //retorna "AAAA-MM-DD"
                 },
                 dateFormat: (data) =>{
-                    data = new Date(data)
-                    var dia = data.getDate()
-                    var mes = (data.getMonth()+1)
-                    var ano = data.getFullYear()
-                    if(dia <= 9){
-                        dia = "0" + dia
-                    }
-
-                    if(mes <= 9){
-                        mes = "0" + mes
-                    }
-                    return dia +"/"+ mes +"/"+ ano //retorna "DD-MM-AAAA"
+                    data = new Date(data).toISOString()
+                    var ano = data.slice(0,4)
+                    var mes = data.slice(5,7)
+                    var dia = data.slice(8,10)
+                    
+                    return dia +"/"+ mes +"/"+ ano //retorna "DD/MM/AAAA"
                 },
                 json: (context) =>{
                     return JSON.stringify(context);
@@ -92,10 +90,10 @@
 
         })
 
-         app.engine('handlebars', hbs.engine);
-         app.set('view engine', 'handlebars');
-         
-         
+        app.engine('handlebars', hbs.engine);
+        app.set('view engine', 'handlebars');
+        
+        
     
     //Mongoose
     mongoose.Promise = global.Promise
@@ -119,7 +117,8 @@
     app.use('/admin', admin);
     app.use("/usuarios", usuarios)
     
-    //rota para página nao encontrada
+    //FIXME: reativar ao "concluir"
+    // rota para página nao encontrada
     // app.get("*" , (req,res) =>{
     //     res.render('404')
     // })

@@ -288,17 +288,23 @@ router.get('/', eAdmin, (req,res)=>{
 
     //rota deletar aluguel
     router.post("/aluguel/deletar", eAdmin, (req, res) => {
-        Aluguel.deleteOne({_id: req.body.id}).then(() =>{
-            req.flash("success_msg", "aluguel deletado!")
-            res.redirect("/admin/aluguel")
-        }).catch((err) => {
-            req.flash("error_msg" , "Erro ao deletar: " + err)
-            res.redirect("/admin/aluguel")
+        var quantidade = 1
+        
+        Ferramenta.updateOne({ferramenta: req.body.ferramenta}, {$inc: {unidade: quantidade}}, () =>{ 
+            console.log(res.nModified)
+            Aluguel.deleteOne({_id: req.body.id}).then(() =>{
+                req.flash("success_msg", "aluguel deletado!")
+                res.redirect("/admin/aluguel")
+            }).catch((err) => {
+                req.flash("error_msg" , "Erro ao deletar: " + err)
+                res.redirect("/admin/aluguel")
+            })
         })
     })
 
     //salva aluguel     
     router.post('/aluguel/new', eAdmin, (req,res) =>{
+        var quantidade = 1 
         const novoAluguel = {
             idFerramenta: req.body.ferramenta,
             idCliente: req.body.usuario,
@@ -306,11 +312,14 @@ router.get('/', eAdmin, (req,res)=>{
             dataDevolucao: req.body.dataDevolucao
 
         }
-        new Aluguel (novoAluguel).save().then(()=>{
-            req.flash("success_msg", 'Aluguel salva com sucesso')
-            res.redirect('/admin/aluguel')
-        }).catch((err) => {
-            req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
+        
+        Ferramenta.updateOne({_id: req.body.ferramenta}, {$inc: {unidade: -quantidade}}, () =>{ 
+            new Aluguel (novoAluguel).save().then(()=>{
+                req.flash("success_msg", 'Aluguel salva com sucesso')
+                res.redirect('/admin/aluguel')
+            }).catch((err) => {
+                req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
+            })
         })
     })
 

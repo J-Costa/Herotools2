@@ -1,0 +1,56 @@
+<h2>meus pedidos</h2>
+<hr>
+<div class="row mt-4 col-lg">
+{{#each pedidos}}
+    <div class="card border-primary">
+        <div class="card-body ">
+            <label for="dataPedido">Pedido realizado em: {{dateFormat dataPedido}}</label>
+            <hr>
+            <div class="col">
+                Data de retirada: {{dateFormat dataRetirada}}
+            </div>
+            <div class="col mt-2">
+                Data de devolução: {{dateFormat dataDevolucao}}
+            </div>
+            <hr>
+            <div class="row justify-content-center">
+                <div class="card card-group">
+                    <div class="card-body">
+                    Endereço: 
+                        <div class="col-sm">
+                            Rua: {{usuario.endereco}}
+                        </div>
+                        <div class="col-sm">
+                            Bairro: {{usuario.bairro}}
+                        </div>
+                        <div class="col-sm">
+                            CEP: {{usuario.cep}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {{#each this.itens}}
+            <div class="row justify-content-center">
+            <div class="card-body">
+                <h6>Item do pedido</h6>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <strong>{{this.item.modelo}}  </strong>
+                        <span class="badge badge-dark ">X {{this.qtd}}  </span>
+                        <div class="btn-group float-right">
+                        </div>
+                        <br>
+                        <small>{{this.item.tipo}}</small>
+                    </li>
+                </ul>
+            </div>
+            </div>
+            {{/each}}
+            <div class="card-footer">
+                <strong> Total de itens: {{this.carrinho.totalQtd}} </strong>
+            </div>
+        </div>
+    </div>
+{{/each}}
+</div>

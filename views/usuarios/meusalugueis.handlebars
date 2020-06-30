@@ -1,13 +1,17 @@
 <h1>Meus aluguéis:</h1>
 {{#each aluguel}}
+
 <div class="card mt-2">
     <div class="card-body ">
             <h5>Ferramenta: {{idFerramenta.modelo}}</h5>
             <h6>{{idFerramenta.tipo}}</h6>
             
-            <small>Data retirada: {{dateFormat dataRetirada}}</small>
+            <small>Data retirada: {{ dateFormat dataRetirada}}</small>
             <br>
-            <small>Data devolução: {{dateFormat dataDevolucao}}</small>
+            <small>Data devolução: {{ dateFormat dataDevolucao}}</small>
+            <div class="card-footer">
+            <a href="/devolver" class="btn btn-primary mt-2">Devolver ferramenta</a>
+            </div>  
     </div>
 </div>
 {{/each}}

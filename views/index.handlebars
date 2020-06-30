@@ -1,13 +1,34 @@
 
 <div class="row mb-5 mt-4">
   {{#each ferramenta}}
-  {{!-- <div class="card-group col-sm-4 mb-4" style="width: 18rem;"> --}}
+      {{#ifvalue unidade equals="0"}}
+        <div class="card-group col-sm-4 mb-4" ">
+          <div class="card">
+            <img src="{{ferramenta}}" alt="" class="card-img-top" width="200" height="200">
+            <div class="card-body">
+              <h4 class="card-title">{{tipo}}</h4>
+              <h5 class="card-subtitle mb-2 tex-muted">{{modelo}}</h5>
+              <h6 class="card-subtitle mt-2 tex-muted badge badge-danger"> Ferramenta indisponível</h6>
+            </div>
+            <div class="card-footer">
+              <a href="/usuarios/add/{{_id}}" class="btn btn-danger disabled">Indiponível</a>
+              
+              <a href="/usuarios/reservar/{{_id}}" class="btn btn-primary ml-2">Reservar</a>
+            </div>
+          </div>
+        </div>    
+      {{else}}
   <div class="card-group col-sm-4 mb-4" ">
     <div class="card">
       <img src="{{ferramenta}}" alt="" class="card-img-top" width="200" height="200">
       <div class="card-body">
         <h4 class="card-title">{{tipo}}</h4>
-        <h6 class="card-subtitle mb-2 tex-muted">{{modelo}}</h6>
+        <h5 class="card-subtitle mb-2 tex-muted">{{modelo}}</h5>
+        {{#ifvalue unidade equals="1"}}
+        <h6 class="card-subtitle mt-2 tex-muted badge badge-warning"> Apenas {{unidade}} disponível</h6>
+        {{else}}
+        <h6 class="card-subtitle mt-2 tex-muted badge badge-success"> {{unidade}} unidades disponíveis</h6>
+        {{/ifvalue}}
       </div>
       <div class="card-footer">
         <a href="/usuarios/add/{{_id}}" class="btn btn-info">Adicionar ao carrinho</a>
@@ -16,5 +37,16 @@
       </div>
     </div>
   </div>
+  {{/ifvalue}}
   {{/each}}
+
+<div class="col offset-lg-10 ">
+    <nav aria-label="Paginas">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="?prev">&laquo;</a></li>
+        <li class="page-item"><a class="page-link" href="?next">&raquo;</a></li>
+      </ul>
+    </nav>
+  </div>
+
 </div>

@@ -1,40 +1,57 @@
 {{#if produtos}} 
     {{#each produtos}}
-    
-        <div class="row">
-            <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3 ">
-                <ul class="list-group">
-                    <li class="list-group-item mt-2">
-                        <strong>{{this.item.modelo}}</strong>
-                        <span class="badge badge-dark ">X {{this.qtd}}  </span>
-                        <div class="btn-group float-right">
-                            <div class="dropdown">
-                                <a class="btn btn-secondary  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Remover
-                                </a>
-
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="/usuarios/removerum/{{this.item._id}}">1 item</a>
-                                    <a class="dropdown-item" href="/usuarios/removertodos/{{this.item._id}}">Todos</a>
-                                </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3 ">
+            <ul class="list-group">
+                <li class="list-group-item mt-2">
+                    <strong>{{this.item.modelo}}</strong>
+                    <span class="badge badge-dark ">X {{this.qtd}}  </span>
+                    <div class="btn-group float-right">
+                        <div class="dropdown">
+                            <a class="btn btn-secondary  dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Remover
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="/usuarios/removerum/{{this.item._id}}">1 item</a>
+                                <a class="dropdown-item" href="/usuarios/removertodos/{{this.item._id}}">Todos</a>
                             </div>
                         </div>
-                    </li>
-                </ul>
-            </div>
+                    </div>
+                </li>
+            </ul>
         </div>
+    </div>
     {{/each}}
-        <br>
-        <h5>Total de itens: {{totalDeItens}}</h4>
-        <br>
-        <a href="/usuarios/pedido"> <button class="btn btn-success">Fazer pedido</button> </a>
+    <div class="row mt-4 justify-content-center">
+    <form action="/usuarios/pedido/new" method="POST">
+        <div class="card">
+            <div class="card-body">
+                    <div class="col-sm ">
+                        <label for="date">Data de retirada:</label>
+                        <br>
+                        <input type="date" id="dataretirada" name="dataRetirada" min="{{dateFormat2 dataAtual}}"  value="{{dateFormat2 dataAtual}}">
+                    </div>
+                    <div class="col-sm mt-2">
+                        <label for="date">Data de devolução:</label>
+                        <br>
+                        <input type="date" id="datadevolucao" name="dataDevolucao" min="{{dateFormat2 dataAtual}}">
+                    </div>
+                </div>
+            </div>        
+        </div>    
+    <div class="row justify-content-center">
+        <h5 class="mt-4">Total de itens: {{totalDeItens}}</h4>
+    </div>
+    <div class="row justify-content-center">
+    <button class="btn btn-success" type="submit">Finalizar pedido</button> 
+    </div> 
+    </form>   
 {{else}}
-      <div class="row">
+    <div class="row justify-content-center">
         <div class="col-sm-6 col-md-6 col-md-offset-3 col-sm-offset-3 ">
             <h2>Carrinho vazio... </h2>
             <br>    
             <h3><a href="/">Escolher ferramentas</a></h3>
         </div>
-      </div>
+     </div>
 {{/if}}
- 

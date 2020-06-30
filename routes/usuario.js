@@ -11,6 +11,7 @@ const mongoose = require('../models/Usuario')
 const Usuario = mongoose.model("Usuario")
 const Ferramenta = require('../models/Ferramenta')
 const Aluguel = require('../models/Aluguel')
+const Pedido = require("../models/Pedido")
 const Carrinho = require("../models/carrinho")
 const {isLogado} = require("../helpers/isLogado")
 
@@ -182,7 +183,7 @@ router.post("/edit" , isLogado, (req,res,next) =>{
     })    
 })
 
-//rota para meu perfil
+//rota para meus alugueis, lista alugueis unicos
 router.get("/meusalugueis" , isLogado,(req, res) => {
     Aluguel.find({idCliente: req.user.id}).lean().populate("idCliente").populate("idFerramenta").then((aluguel)=>{
         res.render("usuarios/meusalugueis", {aluguel: aluguel})
@@ -192,16 +193,24 @@ router.get("/meusalugueis" , isLogado,(req, res) => {
         })
 })
 
-//TODO: rota para meus ferramentas
-//FIXME: precisa mudar o model de ferramenta para identificar o proprietario. 
-// Se for o caso
-// router.get("/minhasferramentas" , (req, res) => {
-//     res.render("usuarios/minhasferramentas")
-// })
+//rota para meus pedidos, alugueis com um ou mais itens
+router.get("/meuspedidos",isLogado,  (req,res) => {
+    Pedido.find({usuario: req.user}).
+    lean().
+    populate("usuario").
+    then((pedidos) => {
+        var carrinho
+        pedidos.forEach((pedido) => {
+            carrinho = new Carrinho(pedido.carrinho)
+            pedido.itens = carrinho.gerarArray()
+        })
+        res.render("usuarios/meuspedidoscopy", {pedidos: pedidos })
+    })
+
+})
+
 
 //rota direciona para aluguel com usuario e ferramenta definida
-//FIXME: validar data de entrada, nao podera ser menor que data atual
-//talvez definir periodos de aluguem em periodos  
 router.get("/alugar/:id", isLogado, (req, res) => {
     Ferramenta.findOne({_id: req.params.id}).lean().then((ferramenta) => {
     res.render("usuarios/alugar", {ferramenta: ferramenta , dataAtual: Date()})
@@ -212,35 +221,23 @@ router.get("/alugar/:id", isLogado, (req, res) => {
 })
 
 //rota adiciona aluguel
-//FIXME: validar data de aluguel, adicionar tratativa de erro e redirecionar para aluguel com mensagem
 router.post('/alugar/new', isLogado, (req,res) =>{
-        function getDataReal (data){
-            data = new Date(data)
-            var dia = data.getDate()+2
-            var mes = (data.getMonth())+1
-            var ano = data.getFullYear()
-            if(dia <= 9){
-                dia = "0" + dia
-            }
-
-            if(mes <= 9){
-                mes = "0" + mes
-            }
-            return ano +"-"+ mes +"-"+ dia
-        }
+        var quantidade = 1
 
         const novoAluguel = {
             idFerramenta: req.body.ferramenta,
             idCliente: req.body.usuario,
-            dataRetirada:  getDataReal(req.body.dataRetirada),
-            dataDevolucao: getDataReal(req.body.dataDevolucao)
-
+            dataRetirada:  req.body.dataRetirada,
+            dataDevolucao: req.body.dataDevolucao,
         }
-        new Aluguel (novoAluguel).save().then(()=>{
-            req.flash("success_msg", 'Aluguel salvo com sucesso')
-            res.redirect('/')
-        }).catch((err) => {
-            req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
+        
+        Ferramenta.updateOne({_id: req.body.ferramenta}, {$inc: {unidade: -quantidade}}, () =>{ 
+            new Aluguel (novoAluguel).save().then(()=>{
+                req.flash("success_msg", 'Aluguel salvo com sucesso')
+                res.redirect('/')
+            }).catch((err) => {
+                req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
+            })
         })
 })
 
@@ -249,14 +246,21 @@ router.post('/alugar/new', isLogado, (req,res) =>{
 router.get("/add/:id", (req, res, next) => {
     var idProduto = req.params.id
     var carrinho = new Carrinho(req.session.carrinho ? req.session.carrinho : {itens: {}})
-    Ferramenta.findById(idProduto).then((ferramenta) => {
-        carrinho.add(ferramenta, ferramenta.id)
-        req.session.carrinho = carrinho
-        res.redirect("/")
-    }).catch((err) =>{
-        res.redirect("/")
-        req.flash("error_msg" , "Erro ao adicionar no carrinho " + err )
-    })
+        
+            Ferramenta.findById(idProduto).then((ferramenta) => {
+                carrinho.add(ferramenta, ferramenta.id)
+                if(carrinho.itens[idProduto].qtd > ferramenta.unidade){
+                    req.flash("error_msg", "Já adicionou o máximo disponivel no carrinho")
+                    carrinho.removerItem(idProduto)
+                }
+                req.session.carrinho = carrinho
+                res.redirect("/")
+                    
+                }).catch((err) =>{
+                    res.redirect("/")
+                    req.flash("error_msg" , "Erro ao adicionar no carrinho " + err )
+                })
+                
 })
 
 //rota para view do carrinho 
@@ -265,7 +269,10 @@ router.get("/carrinho",  (req,res) => {
         return res.render("usuarios/carrinho", {produtos : null})
     }
     var carrinho = new Carrinho(req.session.carrinho)
-    res.render("usuarios/carrinho", {produtos: carrinho.gerarArray(), totalDeItens: carrinho.totalQtd})
+    res.render("usuarios/carrinho", {produtos: carrinho.gerarArray(),
+    totalDeItens: carrinho.totalQtd, 
+    dataAtual: Date()
+    })
 })
 
 //remover 1 item do carrinho
@@ -278,7 +285,7 @@ router.get("/removerum/:id" , (req,res,next) => {
     res.redirect("/usuarios/carrinho")
 })
 
-//remover 1 item do carrinho
+//remover todos item do carrinho
 router.get("/removertodos/:id" , (req,res,next) => {
     var idProduto = req.params.id
     var carrinho = new Carrinho(req.session.carrinho ? req.session.carrinho : {itens: {}})
@@ -289,8 +296,65 @@ router.get("/removertodos/:id" , (req,res,next) => {
 })
 
 //rota para finalizar pedido
-router.get("/pedido" ,isLogado , (req,res) =>{
-    res.render("usuarios/pedido")
+//INFO: o pedido está sendo finalizado no carrinho
+// router.get("/pedido" ,isLogado , (req,res) =>{
+//     var carrinho = new Carrinho(req.session.carrinho)
+
+//     var pedido = new Pedido({
+//         usuario: req.user,
+//         carrinho: carrinho
+        
+//     })
+//     res.render("usuarios/pedido", {pedido: pedido.toObject()})
+// })
+
+//rota para realizar o pedido e salvar no banco
+router.post("/pedido/new" ,isLogado , (req,res) =>{
+    if(!req.session.carrinho){
+        res.redirect("/usuarios/carrinho")
+    }
+
+    var carrinho = new Carrinho(req.session.carrinho)
+    var pedido = new Pedido({
+        usuario: req.user.id,
+        carrinho: carrinho,
+        dataRetirada:  req.body.dataRetirada,
+        dataDevolucao:  req.body.dataDevolucao
+    })
+        pedido.save(pedido)
+        .then(() => {
+            listaItens = carrinho.gerarArray()
+            listaItens.forEach(atualizaVarios)
+            function atualizaVarios (index, item) {
+                var idItem = listaItens[item].item._id
+                var qtdItem = listaItens[item].qtd
+                Ferramenta.updateOne({_id: idItem}, {$inc: {unidade: -qtdItem}}, () => { 
+                })
+            }
+            req.session.carrinho = null
+            req.flash("success_msg", "Pedido realizado com sucesso!")
+            res.redirect("/")
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao realizar o pedido! " + err)
+            res.redirect("/")
+        })
 })
 
+//rota para reservar ferramenta
+router.get("/reservar/:id" , (req,res) =>{
+    Aluguel.
+    find({idFerramenta: req.params.id}).
+    lean().
+    populate("idFerramenta").
+    populate("idCliente").
+    limit(5).
+    sort({dataDevolucao: "asc"}).
+    then((aluguel) =>{
+        res.render("usuarios/reservar", {aluguel: aluguel})
+    }).catch((err) =>{
+        req.flash("error_msg", "Erro:" +err)
+        res.redirect('/')
+    })
+
+})
 module.exports = router

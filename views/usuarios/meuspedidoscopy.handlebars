@@ -1,0 +1,51 @@
+<h2>meus pedidos</h2>
+<hr>
+{{#each pedidos}}
+<div class="card  mt-4 border-primary" ">
+    <div class="card-header">
+        Pedido realizado em: {{dateFormat dataPedido}}
+    </div>
+    <div class="row">
+    <div class="col text-center">
+        <div class="card border-dark">
+        <div class="card-header">
+        Itens do pedido
+        </div>
+        <ul class="list-group list-group-flush">
+        {{#each itens}}
+        <li class="list-group-item">{{item.modelo}}
+        <span class="badge badge-dark ">X {{this.qtd}}</span>
+        <div class="btn-group float-right"></div>
+        </li>
+{{/each}}
+        <div class="card-footer ">
+        Total de itens: {{carrinho.totalQtd}}
+        </div >
+        </ul>
+        </div>
+    </div>
+    <div class="col text-center">
+        <div class="card border-dark">
+        <div class="card-header">
+        Datas
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{item.modelo}}
+            Data de retirada: {{dateFormat dataRetirada}}
+            </li>
+            <li class="list-group-item">{{item.modelo}}
+            Data de devolução: {{dateFormat dataDevolucao}}
+            </li>
+        </ul>
+        </div>
+    </div>
+    </div>
+    <div class="row mt-2 ">
+        <div class="col text-center">
+        <button class="btn btn-primary">
+            Confirmar devolução 
+        </button>
+        </div>
+    </div>
+</div>
+{{/each}}

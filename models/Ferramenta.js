@@ -16,7 +16,9 @@ const FerramentaSchema = mongoose.Schema({
     },
     unidade: {
         type: Number,
-        require: true
+        require: true,
+        min: 1,
+        default: 1
     }
 });
 
