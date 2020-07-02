@@ -1,0 +1,67 @@
+<h2>Todos pedidos</h2>
+<hr>
+{{#each pedidos}}
+<div class="card  mt-5 border-primary" ">
+    
+        <div class="card-body  card-footer text-center">
+            <div class="col card ">
+                Pedido realizado em: {{dateFormat dataPedido}}
+            </div>
+            <div class="col card my-1">
+                Usuário: {{usuario.nome}}
+            </div>
+            <div class="col card  ">
+                E-mail: {{usuario.email}}
+            </div>
+        </div>          
+    <div class="row mt-4">
+    <div class="col text-center mx-2 my-2">
+        <div class="card border-dark">
+        <div class="card-header">
+        Itens do pedido
+        </div>
+        <ul class="list-group list-group-flush">
+        {{#each itens}}
+        <li class="list-group-item">{{item.modelo}}
+        <span class="badge badge-dark ">X {{this.qtd}}</span>
+        <div class="btn-group float-right"></div>
+        </li>
+        {{/each}}
+        <div class="card-footer ">
+        Total de itens: {{carrinho.totalQtd}}
+        </div >
+        </ul>
+        </div>
+    </div>
+    <div class="col text-center mx-2 my-2">
+        <div class="card border-dark">
+        <div class="card-header">
+        Datas
+        </div>
+        <ul class="list-group list-group-flush ">
+            <li class="list-group-item">{{item.modelo}}
+            Data de retirada: {{dateFormat dataRetirada}}
+            </li>
+            <li class="list-group-item">{{item.modelo}}
+            Data prevista de devolução: {{dateFormat dataDevolucao}}
+            </li>
+            <li class="list-group-item">{{item.modelo}}
+            Pedido devolvido em: {{#if devolvidoEm}}{{dateFormat devolvidoEm}}{{else}}Ainda sem devolução{{/if}}
+            </li>
+        </ul>
+        </div>
+    </div>
+    </div>
+    <div class="card card-footer mt-2 ">
+        <div class="col text-center">
+            {{#if devolvidoEm}}
+                <button class="btn btn-success " disabled> Pedido devolvido! </button>
+            {{else}}
+                <a href="/admin/devolverpedido/{{_id}}" class="btn btn-primary">
+                    Confirmar devolução 
+                </a>
+            {{/if}}
+        </div>
+    </div>
+</div>
+{{/each}}

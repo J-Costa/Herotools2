@@ -11,6 +11,8 @@ require('../models/Usuario')
 const Usuario = mongoose.model('Usuario')
 require('../models/Aluguel')
 const Aluguel = mongoose.model('Aluguel')
+const Pedido = require('../models/Pedido')
+const Carrinho = require('../models/carrinho')
 const {eAdmin} = require("../helpers/eAdmin")
 
 
@@ -335,6 +337,41 @@ router.get('/', eAdmin, (req,res)=>{
             })
         })
 //} fim aluguel
+
+//rota para listar todos os pedidos
+router.get("/pedidos",eAdmin , (req,res) => {
+    Pedido.find().
+    lean().
+    populate("usuario").
+    then((pedidos) => {
+        var carrinho
+        pedidos.forEach((pedido) => {
+            carrinho = new Carrinho(pedido.carrinho)
+            pedido.itens = carrinho.gerarArray()
+        })
+        res.render("admin/pedidos", {pedidos: pedidos })
+    })
+})
+
+//rota para devolver o pedido
+router.get("/devolverpedido/:id" ,eAdmin,(req,res) => {
+    Pedido.findOne({_id: req.params.id}).
+    then((pedido) =>{
+            carrinho = new Carrinho(pedido.carrinho)
+            listaItens = carrinho.gerarArray()
+            listaItens.forEach(atualizaVarios)
+            function atualizaVarios (index, item) {
+                var idItem = listaItens[item].item._id
+                var qtdItem = listaItens[item].qtd
+                Ferramenta.updateOne({_id: idItem}, {$inc: {unidade: qtdItem}}, () => { 
+                })
+            }
+            Pedido.updateOne({_id: pedido._id}, {$set: {devolvidoEm: Date()}}, () => { 
+            })
+        
+        res.redirect("/admin/pedidos")
+    })
+})
 
 //404
 router.get("*", (req, res) => {

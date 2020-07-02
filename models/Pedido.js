@@ -7,8 +7,8 @@ const PedidoSchema = mongoose.Schema({
   carrinho: {type: Object, required: true},
   dataRetirada: {type: Date, required: true},
   dataDevolucao: {type: Date, required: true},
+  devolvidoEm: {type: Date, default: undefined },
   dataPedido: {type: Date, default: Date.now()}
-
 });
 
 const Pedido = module.exports = mongoose.model('Pedido', PedidoSchema);
