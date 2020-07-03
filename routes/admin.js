@@ -339,7 +339,7 @@ router.get('/', eAdmin, (req,res)=>{
 //} fim aluguel
 
 //rota para listar todos os pedidos
-router.get("/pedidos",eAdmin , (req,res) => {
+router.get("/todospedidos",  (req,res) => {
     Pedido.find().
     lean().
     populate("usuario").
@@ -348,8 +348,57 @@ router.get("/pedidos",eAdmin , (req,res) => {
         pedidos.forEach((pedido) => {
             carrinho = new Carrinho(pedido.carrinho)
             pedido.itens = carrinho.gerarArray()
+            if(pedido.dataDevolucao < new Date()){
+                pedido.emAtraso = true
+            }else{
+                pedido.emAtraso = false
+            }
+            
         })
-        res.render("admin/pedidos", {pedidos: pedidos })
+        res.render("admin/pedidos/todospedidos", {pedidos: pedidos })
+    })
+})
+
+// rota para pedidos em atraso
+router.get("/pedidosematraso",  (req,res) => {
+    Pedido.find({dataDevolucao: {$lt: Date()}, devolvidoEm: {$eq: null}}).
+    lean().
+    populate("usuario").
+    sort({dataDevolucao: 1}).
+    then((pedidos) => {
+        var carrinho
+        pedidos.forEach((pedido) => {
+            carrinho = new Carrinho(pedido.carrinho)
+            pedido.itens = carrinho.gerarArray()
+            if(pedido.dataDevolucao < new Date()){
+                pedido.emAtraso = true
+            }else{
+                pedido.emAtraso = false
+            }
+            
+        })
+        res.render("admin/pedidos/pedidosematraso", {pedidos: pedidos })
+    })
+})
+
+// rota para pedidos em devolvidos
+router.get("/pedidosdevolvidos",  (req,res) => {
+    Pedido.find({devolvidoEm: { $ne: null}}).
+    lean().
+    populate("usuario").
+    then((pedidos) => {
+        var carrinho
+        pedidos.forEach((pedido) => {
+            carrinho = new Carrinho(pedido.carrinho)
+            pedido.itens = carrinho.gerarArray()
+            if(pedido.dataDevolucao < new Date()){
+                pedido.emAtraso = true
+            }else{
+                pedido.emAtraso = false
+            }
+            
+        })
+        res.render("admin/pedidos/pedidosdevolvidos", {pedidos: pedidos })
     })
 })
 
@@ -369,7 +418,7 @@ router.get("/devolverpedido/:id" ,eAdmin,(req,res) => {
             Pedido.updateOne({_id: pedido._id}, {$set: {devolvidoEm: Date()}}, () => { 
             })
         
-        res.redirect("/admin/pedidos")
+        res.redirect("/admin/todospedidos")
     })
 })
 

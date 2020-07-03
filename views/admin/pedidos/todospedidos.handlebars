@@ -1,16 +1,25 @@
-<h2>Todos pedidos</h2>
-<hr>
+<ul class="nav bg-light  nav-pills nav-fill ">
+  <li class="nav-item">
+    <a class="nav-link active" href="/admin/todospedidos">Todos os pedidos</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-success" href="/admin/pedidosdevolvidos">Pedidos devolvidos</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-danger" href="/admin/pedidosematraso">Pedidos em atraso</a>
+  </li>
+</ul>
 {{#each pedidos}}
-<div class="card  mt-5 border-primary" ">
+<div class="card  mt-5 border-primary bg-light" ">
     
-        <div class="card-body  card-footer text-center">
-            <div class="col card ">
+        <div class="card-body  card-footer text-center ">
+            <div class="col card border-dark">
                 Pedido realizado em: {{dateFormat dataPedido}}
             </div>
-            <div class="col card my-1">
+            <div class="col card my-2 border-dark">
                 Usuário: {{usuario.nome}}
             </div>
-            <div class="col card  ">
+            <div class="col card border-dark ">
                 E-mail: {{usuario.email}}
             </div>
         </div>          
@@ -39,15 +48,30 @@
         Datas
         </div>
         <ul class="list-group list-group-flush ">
-            <li class="list-group-item">{{item.modelo}}
+            <li class="list-group-item">
             Data de retirada: {{dateFormat dataRetirada}}
             </li>
-            <li class="list-group-item">{{item.modelo}}
+            <li class="list-group-item">
             Data prevista de devolução: {{dateFormat dataDevolucao}}
             </li>
-            <li class="list-group-item">{{item.modelo}}
-            Pedido devolvido em: {{#if devolvidoEm}}{{dateFormat devolvidoEm}}{{else}}Ainda sem devolução{{/if}}
+            <li class="list-group-item">
+            {{#if devolvidoEm}}
+            Devolvido em: {{dateFormat devolvidoEm}}
+            {{else}}
+            Ainda sem devolução
+                {{#if emAtraso}}
+                <li class="list-group-item border-danger text-danger">
+                    Pedido em atraso
+                </li >
+                {{else}}
+                <li class="list-group-item border-success text-success">
+                    Pedido dentro do prazo
+                </li >
+                {{/if}}
+            {{/if}}
             </li>
+
+            
         </ul>
         </div>
     </div>
@@ -64,4 +88,5 @@
         </div>
     </div>
 </div>
+
 {{/each}}

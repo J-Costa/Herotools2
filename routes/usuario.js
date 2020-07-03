@@ -331,8 +331,8 @@ router.post("/pedido/new" ,isLogado , (req,res) =>{
                 Ferramenta.updateOne({_id: idItem}, {$inc: {unidade: -qtdItem}}, () => { 
                 })
             }
-            req.session.carrinho = null
             req.flash("success_msg", "Pedido realizado com sucesso!")
+            req.session.carrinho = null
             res.redirect("/")
         }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao realizar o pedido! " + err)
