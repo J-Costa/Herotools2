@@ -1,5 +1,6 @@
-<h2>meus pedidos</h2>
+<h2>Meus pedidos</h2>
 <hr>
+{{#if pedidos}}
 {{#each pedidos}}
 {{#if devolvidoEm}}
 <div class="card  mt-5 border-primary bg-success" ">
@@ -85,3 +86,7 @@
 </div>
 
 {{/each}}
+{{else}}
+<h4>Você ainda não possui pedidos</h4>
+<a href="/"><h5>Clique aqui para ver ferramentas...</h5></a>
+{{/if}}

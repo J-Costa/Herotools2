@@ -4,7 +4,7 @@
 <div class="row justify-content-center">
     <div class="card my-2 border-info">
         <div class="card-body">
-            <h4>{{idFerramenta.modelo}}</h4>
+            <h4>{{idFerramenta.modelo}} - {{idFerramenta.tipo}}</h4>
             <h5>Previsão de disponibilidade em: {{dateFormat dataDevolucao}}</h5>
             <form action="/usuarios/reservar/{{idFerramenta._id}}" method="POST">
             <div class="btn-group">
@@ -18,11 +18,10 @@
     {{/each}}       
 
         {{#each pedidos}}
-        {{log pedidos}}
 <div class="row justify-content-center">
     <div class="card my-2 border-info">
         <div class="card-body">
-            <h4>{{idFerramenta.modelo}}</h4>
+            <h4>{{idFerramenta.modelo}} - {{idFerramenta.tipo}}</h4>
             <h5>Previsão de disponibilidade em: {{dateFormat dataDevolucao}}</h5>
             <form action="/usuarios/reservar/{{idFerramenta._id}}" method="POST">
             <div class="btn-group">

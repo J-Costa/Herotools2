@@ -13,14 +13,14 @@ module.exports = function(passport){
         
         Usuario.findOne({email: email}).then((usuario) => {
             if(!usuario){
-                return done(null, false, {message: "Esta conta não existe "})
+                return done(null, false, {message: "Esta conta não existe!"})
             }
 
             bcrypt.compare(senha, usuario.senha, (erro, batem) => {
                 if(batem){
                     return done(null, usuario)
                 }else{
-                    return done(null, false, {message: "Senha incorreta "+ erro})
+                    return done(null, false, {message: "Senha incorreta!"})
                 }
             })
         })

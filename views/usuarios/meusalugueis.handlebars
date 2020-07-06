@@ -1,4 +1,6 @@
 <h1>Meus aluguéis:</h1>
+<hr>
+{{#if aluguel}}
 {{#each aluguel}}
 <div class="card mt-3 border-primary">
     <div class="card-body ">
@@ -15,3 +17,7 @@
     </div>
 </div>
 {{/each}}
+{{else}}
+<h4>Você ainda não possui ferramentas alugadas</h4>
+<a href="/"><h5>Clique aqui para ver ferramentas...</h5></a>
+{{/if}}

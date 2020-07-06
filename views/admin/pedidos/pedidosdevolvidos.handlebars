@@ -11,7 +11,14 @@
 </ul>
 
 {{#each pedidos}}
+{{#if devolvidoEm}}
+<div class="card  mt-5 border-primary bg-success" ">
+{{else}}
 <div class="card  mt-5 border-primary bg-light" ">
+{{#if emAtraso}}
+<div class="card  mt-5 border-primary bg-danger" ">
+{{/if}}
+{{/if}}
     
         <div class="card-body  card-footer text-center ">
             <div class="col card border-dark">

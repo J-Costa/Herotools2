@@ -354,12 +354,12 @@ router.post("/pedido/new" ,isLogado , (req,res) =>{
 //rota para view reservar ferramenta
 router.get("/reservar/:id" ,isLogado, (req,res) =>{
     Aluguel.
-    find({idFerramenta: req.params.id}).
+    find({idFerramenta: req.params.id, devolucaoEm: undefined}).
     lean().
     populate("idFerramenta").
     populate("idCliente").
-    limit(5).
-    sort({dataDevolucao: "asc"}).
+    sort({dataDevolucao: -1}).
+    limit(1).
     then((aluguel) =>{
         res.render("usuarios/reservar", {aluguel: aluguel  ,user: req.user.toObject()})
     }).catch((err) =>{
@@ -382,7 +382,7 @@ router.post("/reservar/:id", (req,res) => {
             isAtivo : true
         })
         reserva.save(reserva).then(() => {
-            req.flash("success_msg", "ferramenta reservada " +reserva.fila)
+            req.flash("success_msg", "Ferramenta reservada!")
             res.redirect("/usuarios/reservar/" + req.params.id)
         }).catch((err) => {
             req.flash("error_msg", "Erro ao reservar: " + err)
@@ -397,15 +397,14 @@ router.post("/reservar/:id", (req,res) => {
             isAtivo : true
         })
         reserva.save(reserva).then(() => {
-            req.flash("success_msg", "Ferramenta reservada "+reserva.fila)
-            res.redirect("/usuarios/reservar/" + req.params.id)
+            req.flash("success_msg", "Ferramenta reservada!")
+            res.redirect("/")
         }).catch((err) => {
             req.flash("error_msg", "Erro ao reservar: " + err)
             res.redirect("/" )
         })
     }
     }).catch((err) => {
-        console.log("catch")
         req.flash("error_msg" , "erro: " + err)
         res.redirect("/")
     })
@@ -422,4 +421,13 @@ router.get("/minhasreservas",isLogado, (req,res) => {
     })
 })
 
+//rota para cancelar a reserva
+router.post("/cancelarreserva/:id",isLogado, (req,res) => {
+    Reserva.updateOne({_id: req.params.id}, {$set:{isAtivo: false}}).then(() =>{
+        req.flash("success_msg", "Reserva cancelada!")
+        res.redirect("/usuarios/minhasreservas")
+    })
+    
+
+})
 module.exports = router

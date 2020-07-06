@@ -293,7 +293,6 @@ router.get('/', eAdmin, (req,res)=>{
         var quantidade = 1
         
         Ferramenta.updateOne({ferramenta: req.body.ferramenta}, {$inc: {unidade: quantidade}}, () =>{ 
-            console.log(res.nModified)
             Aluguel.deleteOne({_id: req.body.id}).then(() =>{
                 req.flash("success_msg", "aluguel deletado!")
                 res.redirect("/admin/aluguel")

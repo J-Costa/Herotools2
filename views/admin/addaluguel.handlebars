@@ -14,7 +14,7 @@
             <label for="ferramenta"> Ferramenta</label>
             <select name="ferramenta" class='custom-select'>
                 {{#each ferramenta}}
-                    <option value="{{_id}}" >{{modelo}}</option>
+                    <option value="{{_id}}" >{{modelo}} - {{tipo}}</option>
                 {{else}}
                     <option value="">Nenhuma ferramenta localizada</option>
                 {{/each}}
