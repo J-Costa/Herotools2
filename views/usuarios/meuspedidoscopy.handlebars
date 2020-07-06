@@ -1,51 +1,87 @@
 <h2>meus pedidos</h2>
 <hr>
 {{#each pedidos}}
-<div class="card  mt-4 border-primary" ">
-    <div class="card-header">
-        Pedido realizado em: {{dateFormat dataPedido}}
-    </div>
-    <div class="row">
-    <div class="col text-center">
+{{#if devolvidoEm}}
+<div class="card  mt-5 border-primary bg-success" ">
+{{else}}
+<div class="card  mt-5 border-primary bg-light" ">
+{{#if emAtraso}}
+<div class="card  mt-5 border-primary bg-danger" ">
+{{/if}}
+{{/if}}
+
+    
+        <div class="card-body  card-footer text-center ">
+            <div class="col card border-dark">
+                Pedido realizado em: {{dateFormat dataPedido}}
+            </div>
+            <div class="col card my-2 border-dark">
+                Usuário: {{usuario.nome}}
+            </div>
+            <div class="col card border-dark ">
+                E-mail: {{usuario.email}}
+            </div>
+        </div>          
+    <div class="row mt-4">
+    <div class="col text-center mx-2 my-2">
         <div class="card border-dark">
         <div class="card-header">
         Itens do pedido
         </div>
         <ul class="list-group list-group-flush">
         {{#each itens}}
-        <li class="list-group-item">{{item.modelo}}
+        <li class="list-group-item">{{item.tipo}} - {{item.modelo}}
         <span class="badge badge-dark ">X {{this.qtd}}</span>
         <div class="btn-group float-right"></div>
         </li>
-{{/each}}
+        {{/each}}
         <div class="card-footer ">
         Total de itens: {{carrinho.totalQtd}}
         </div >
         </ul>
         </div>
     </div>
-    <div class="col text-center">
+    <div class="col text-center mx-2 my-2">
         <div class="card border-dark">
         <div class="card-header">
         Datas
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">{{item.modelo}}
+        <ul class="list-group list-group-flush ">
+            <li class="list-group-item">
             Data de retirada: {{dateFormat dataRetirada}}
             </li>
-            <li class="list-group-item">{{item.modelo}}
-            Data de devolução: {{dateFormat dataDevolucao}}
+            <li class="list-group-item">
+            Data prevista de devolução: {{dateFormat dataDevolucao}}
             </li>
+            <li class="list-group-item">
+            {{#if devolvidoEm}}
+            Devolvido em: {{dateFormat devolvidoEm}}
+            {{else}}
+            Ainda sem devolução
+                {{#if emAtraso}}
+                <li class="list-group-item border-danger text-danger">
+                    Pedido em atraso
+                </li >
+                {{else}}
+                <li class="list-group-item border-success text-success">
+                    Pedido dentro do prazo
+                </li >
+                {{/if}}
+            {{/if}}
+            </li>
+
+            
         </ul>
         </div>
     </div>
     </div>
-    {{!-- <div class="row mt-2 ">
+    <div class="card card-footer mt-2 ">
         <div class="col text-center">
-        <button class="btn btn-primary">
-            Confirmar devolução 
-        </button>
+            {{#if devolvidoEm}}
+                <button class="btn btn-success " disabled> Pedido devolvido! </button>
+            {{/if}}
         </div>
-    </div> --}}
+    </div>
 </div>
+
 {{/each}}

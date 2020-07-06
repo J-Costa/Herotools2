@@ -317,7 +317,7 @@ router.get('/', eAdmin, (req,res)=>{
         
         Ferramenta.updateOne({_id: req.body.ferramenta}, {$inc: {unidade: -quantidade}}, () =>{ 
             new Aluguel (novoAluguel).save().then(()=>{
-                req.flash("success_msg", 'Aluguel salva com sucesso')
+                req.flash("success_msg", 'Aluguel salvo com sucesso')
                 res.redirect('/admin/aluguel')
             }).catch((err) => {
                 req.flash("error_msg", 'Erro ao salvar aluguel: ' + err)
@@ -326,7 +326,7 @@ router.get('/', eAdmin, (req,res)=>{
     })
 
     //rota adiciona aluguel
-        router.get('/aluguel/add', (req,res)=>{
+        router.get('/aluguel/add', eAdmin, (req,res)=>{
             Usuario.find({}).lean().then((usuario) => {
                 Ferramenta.find({}).lean().then((ferramenta) =>{
                     res.render("admin/addaluguel", {ferramenta: ferramenta, usuario: usuario})
@@ -339,7 +339,7 @@ router.get('/', eAdmin, (req,res)=>{
 //} fim aluguel
 
 //rota para listar todos os pedidos
-router.get("/todospedidos",  (req,res) => {
+router.get("/todospedidos", eAdmin, (req,res) => {
     Pedido.find().
     lean().
     populate("usuario").
@@ -360,7 +360,7 @@ router.get("/todospedidos",  (req,res) => {
 })
 
 // rota para pedidos em atraso
-router.get("/pedidosematraso",  (req,res) => {
+router.get("/pedidosematraso", eAdmin, (req,res) => {
     Pedido.find({dataDevolucao: {$lt: Date()}, devolvidoEm: {$eq: null}}).
     lean().
     populate("usuario").
@@ -382,7 +382,7 @@ router.get("/pedidosematraso",  (req,res) => {
 })
 
 // rota para pedidos em devolvidos
-router.get("/pedidosdevolvidos",  (req,res) => {
+router.get("/pedidosdevolvidos", eAdmin,  (req,res) => {
     Pedido.find({devolvidoEm: { $ne: null}}).
     lean().
     populate("usuario").
@@ -417,8 +417,23 @@ router.get("/devolverpedido/:id" ,eAdmin,(req,res) => {
             }
             Pedido.updateOne({_id: pedido._id}, {$set: {devolvidoEm: Date()}}, () => { 
             })
-        
+        req.flash("success_msg", "Pedido devolvido!")
         res.redirect("/admin/todospedidos")
+    })
+})
+
+//rota para marcar aluguel como devolvido. 
+router.get("/devolver/:id",eAdmin, (req, res) => {
+    Aluguel.findById(req.params.id).then((aluguel) =>{
+        Aluguel.updateOne({_id: aluguel._id}, {$set:{devolvidoEm: Date()}}, () => {
+            Ferramenta.updateOne({_id: aluguel.idFerramenta}, {$inc: {unidade: 1}}, ()=> {
+                req.flash("success_msg", "Item devolvido!")
+                res.redirect("/admin/aluguel")
+            })
+        })
+    }).catch((err) => {
+        req.flash("error_msg", "Erro ao devolver:" + err)
+        res.redirect("/admin/aluguel")
     })
 })
 

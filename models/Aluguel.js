@@ -2,25 +2,26 @@ const mongoose = require('mongoose');
 
 
 const AluguelSchema = mongoose.Schema({ 
-   idCliente: {
+    idCliente: {
         type: mongoose.Types.ObjectId,
         ref: "Usuario",
         required: true
-   },
-   idFerramenta: {
+    },
+    idFerramenta: {
         type: mongoose.Types.ObjectId,
         ref: "Ferramenta",
         required: true
     },
-   dataRetirada: {
-       type: Date,
-       require: true,
-       default: Date().now 
+    dataRetirada: {
+        type: Date,
+        require: true,
+        default: Date().now 
     },
     dataDevolucao: {
         type: Date,
         require: true
-    }
+    },
+    devolvidoEm: {type: Date, default: undefined }
 });
 
 const Aluguel = module.exports = mongoose.model('Aluguel', AluguelSchema);

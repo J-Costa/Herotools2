@@ -13,6 +13,7 @@ const Ferramenta = require('../models/Ferramenta')
 const Aluguel = require('../models/Aluguel')
 const Pedido = require("../models/Pedido")
 const Carrinho = require("../models/carrinho")
+const Reserva = require("../models/Reserva")
 const {isLogado} = require("../helpers/isLogado")
 
 //rota de registro de usuario
@@ -149,7 +150,7 @@ router.get("/meuperfil" , (req, res) => {
 
 //rota para usuario editar seu perfil
 //FIXME: adicionar validações
-router.post("/edit" , isLogado, (req,res,next) =>{
+router.post("/edit" ,  (req,res,next) =>{
     Usuario.findOne({_id: req.user.id}).then((usuario) => {
         usuario.senha = req.body.senha
         usuario.email = req.body.email
@@ -198,11 +199,17 @@ router.get("/meuspedidos",isLogado,  (req,res) => {
     Pedido.find({usuario: req.user}).
     lean().
     populate("usuario").
+    sort({dataPedido: -1}).
     then((pedidos) => {
         var carrinho
         pedidos.forEach((pedido) => {
             carrinho = new Carrinho(pedido.carrinho)
             pedido.itens = carrinho.gerarArray()
+            if(pedido.dataDevolucao < new Date()){
+                pedido.emAtraso = true
+            }else{
+                pedido.emAtraso = false
+            }
         })
         res.render("usuarios/meuspedidoscopy", {pedidos: pedidos })
     })
@@ -231,7 +238,11 @@ router.post('/alugar/new', isLogado, (req,res) =>{
             dataDevolucao: req.body.dataDevolucao,
         }
         
-        Ferramenta.updateOne({_id: req.body.ferramenta}, {$inc: {unidade: -quantidade}}, () =>{ 
+        Ferramenta.updateOne({_id: req.body.ferramenta}, {$inc: {unidade: -quantidade}}, () =>{
+            Reserva.updateOne({usuario: req.user, 
+                                ferramenta: req.body.ferramenta},
+                                {$set: {isAtivo: false}}).then(() => {
+            })
             new Aluguel (novoAluguel).save().then(()=>{
                 req.flash("success_msg", 'Aluguel salvo com sucesso')
                 res.redirect('/')
@@ -340,8 +351,8 @@ router.post("/pedido/new" ,isLogado , (req,res) =>{
         })
 })
 
-//rota para reservar ferramenta
-router.get("/reservar/:id" , (req,res) =>{
+//rota para view reservar ferramenta
+router.get("/reservar/:id" ,isLogado, (req,res) =>{
     Aluguel.
     find({idFerramenta: req.params.id}).
     lean().
@@ -350,11 +361,65 @@ router.get("/reservar/:id" , (req,res) =>{
     limit(5).
     sort({dataDevolucao: "asc"}).
     then((aluguel) =>{
-        res.render("usuarios/reservar", {aluguel: aluguel})
+        res.render("usuarios/reservar", {aluguel: aluguel  ,user: req.user.toObject()})
     }).catch((err) =>{
         req.flash("error_msg", "Erro:" +err)
         res.redirect('/')
     })
 
 })
+
+//rota para logica de salvar reserva
+router.post("/reservar/:id", (req,res) => {
+    Reserva.find({ferramenta: req.params.id}).sort({fila: -1}).limit(1).then((achaReserva) =>{
+        if(achaReserva[0] != undefined){
+        novaPosicao = achaReserva[0].fila+1
+            reserva = new Reserva({
+            fila : novaPosicao,
+            usuario : req.user._id,
+            ferramenta : req.params.id,
+            dataReserva : Date(),
+            isAtivo : true
+        })
+        reserva.save(reserva).then(() => {
+            req.flash("success_msg", "ferramenta reservada " +reserva.fila)
+            res.redirect("/usuarios/reservar/" + req.params.id)
+        }).catch((err) => {
+            req.flash("error_msg", "Erro ao reservar: " + err)
+            res.redirect("/")
+        })
+    }else{
+        reserva = new Reserva({
+            fila : 1,
+            usuario : req.user._id,
+            ferramenta : req.params.id,
+            dataReserva : Date(),
+            isAtivo : true
+        })
+        reserva.save(reserva).then(() => {
+            req.flash("success_msg", "Ferramenta reservada "+reserva.fila)
+            res.redirect("/usuarios/reservar/" + req.params.id)
+        }).catch((err) => {
+            req.flash("error_msg", "Erro ao reservar: " + err)
+            res.redirect("/" )
+        })
+    }
+    }).catch((err) => {
+        console.log("catch")
+        req.flash("error_msg" , "erro: " + err)
+        res.redirect("/")
+    })
+})
+
+//rota para minhas reservas
+router.get("/minhasreservas",isLogado, (req,res) => {
+    Reserva.find({usuario: req.user}).
+    lean().
+    populate("ferramenta").
+    then((reservas) =>{
+
+        res.render("usuarios/minhasreservas", {reservas: reservas})
+    })
+})
+
 module.exports = router

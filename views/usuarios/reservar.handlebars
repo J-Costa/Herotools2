@@ -1,13 +1,35 @@
     {{#each aluguel}}
+    {{#if devolvidoEm}}
+    {{else}}
 <div class="row justify-content-center">
-    <div class="card mt-2">
+    <div class="card my-2 border-info">
         <div class="card-body">
-            <h6>Esta unidade de ferramenta estará disponivel a partir de: {{dateFormat dataDevolucao}}</h6>
+            <h4>{{idFerramenta.modelo}}</h4>
+            <h5>Previsão de disponibilidade em: {{dateFormat dataDevolucao}}</h5>
+            <form action="/usuarios/reservar/{{idFerramenta._id}}" method="POST">
             <div class="btn-group">
-                <button class="btn btn-success mt-2">Reservar</button>
+                <button type="submit" class="btn btn-success text-white mt-2 ">Reservar</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
-    {{/each}}
+    {{/if}}
+    {{/each}}       
 
+        {{#each pedidos}}
+        {{log pedidos}}
+<div class="row justify-content-center">
+    <div class="card my-2 border-info">
+        <div class="card-body">
+            <h4>{{idFerramenta.modelo}}</h4>
+            <h5>Previsão de disponibilidade em: {{dateFormat dataDevolucao}}</h5>
+            <form action="/usuarios/reservar/{{idFerramenta._id}}" method="POST">
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success text-white mt-2 ">Reservar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+    {{/each}}       

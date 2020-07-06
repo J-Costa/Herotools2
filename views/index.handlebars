@@ -3,8 +3,8 @@
   {{#each ferramenta}}
       {{#ifvalue unidade equals="0"}}
         <div class="card-group col-sm-4 mb-4" ">
-          <div class="card">
-            <img src="{{ferramenta}}" alt="" class="card-img-top" width="200" height="200">
+          <div class="card border-dark">
+            <img src="{{ferramenta}}" alt="" class="card-img-top " width="200" height="200">
             <div class="card-body">
               <h4 class="card-title">{{tipo}}</h4>
               <h5 class="card-subtitle mb-2 tex-muted">{{modelo}}</h5>
@@ -19,7 +19,7 @@
         </div>    
       {{else}}
   <div class="card-group col-sm-4 mb-4" ">
-    <div class="card">
+    <div class="card border-dark">
       <img src="{{ferramenta}}" alt="" class="card-img-top" width="200" height="200">
       <div class="card-body">
         <h4 class="card-title">{{tipo}}</h4>

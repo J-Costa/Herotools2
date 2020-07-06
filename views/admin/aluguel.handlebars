@@ -5,22 +5,30 @@
 {{#each aluguel}}
     <div class="card mt-4">
         <div class="card-body mt-2">
-            <h4 >{{idFerramenta.ferramenta}}</h4>
+            <h4 >{{idFerramenta.tipo}}</h4>
             <small>Modelo: {{idFerramenta.modelo}} </small>
             <br>
             <small>Nome cliente: {{idCliente.nome}}</small>
             <br>
             <small>Data retirada: {{dateFormat dataRetirada}}</small>
             <br>
-            <small>Data devolução: {{dateFormat dataDevolucao}}</small>
+            <small>Data prevista de devolução: {{dateFormat dataDevolucao}}</small>
             <br>
             <a href="/admin/aluguel/edit/{{_id}}"><div class="btn btn-success mt-4">Editar aluguel</div></a>
             <br>
             <form action="/admin/aluguel/deletar" method="POST" >
                 <input type="hidden" name="id" value="{{_id}}">
                 <input type="hidden" name="ferramenta" value="{{idFerramenta.ferramenta}}">
-                <button class="btn btn-danger mt-2">Deletar aluguel</button>
+                <button class="btn btn-danger mt-2 disa">Deletar aluguel</button>
             </form>
+                {{#if devolvidoEm}}
+                <button class="btn btn-primary mt-2">Item devolvido!</button>
+                <small>Devolvido em: {{dateFormat devolvidoEm}}</small>
+                {{else}}
+                <a href="/admin/devolver/{{_id}}" >
+                <button class="btn btn-primary mt-2">Marcar como devolvido</button>
+                {{/if}}
+            </a>
         </div>
     </div>
 {{else}}
