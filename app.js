@@ -109,7 +109,10 @@
 //Rotas
     //pagina principal, carrega ferramentas
     app.get("/" , (req,res) => {
-        Ferramenta.find({}).lean().then((ferramenta) => {
+        Ferramenta.find({})
+        .limit(9)
+        .lean()
+        .then((ferramenta) => {
         res.render('index', {ferramenta: ferramenta, layout: 'main2'})
         })
     })
@@ -119,9 +122,9 @@
     
     //FIXME: reativar ao "concluir"
     // rota para página nao encontrada
-    // app.get("*" , (req,res) =>{
-    //     res.render('404')
-    // })
+    app.get("*" , (req,res) =>{
+        res.render('404')
+    })
 
 //Outros
 const port = 3000
