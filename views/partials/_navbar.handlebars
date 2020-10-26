@@ -2,9 +2,16 @@
   <a class="navbar-brand h1 mb-0" href="/">
   <img src="/img/logo/logo.png" alt="...">
   </a>
-  
-  <a href="/usuarios/carrinho" class="btn btn-outline-light btn-sm align-middle  ml-auto mr-3 order-lg-last" > <i class="fas fa-shopping-cart"> </i>  Carrinho <span class="badge badge-pill  badge-light">{{session.carrinho.totalQtd}}</span></a>
 
+    
+  <a href="/usuarios/carrinho" class="btn btn-outline-light btn-sm align-middle ml-auto mr-3 order-lg-last" > <i class="fas fa-shopping-cart"> </i>  Carrinho <span class="badge badge-pill  badge-light">{{session.carrinho.totalQtd}}</span></a>
+
+  <nav class="navbar navbar-dark bg-dark align-middle  ml-auto mr-3 order-lg-last">
+      <form class="form-inline">
+        <input class="form-control mr-sm-2" name ="busca" type="search" placeholder="Pesquisar ferramentas" aria-label="Search">
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Pesquisar</button>
+      </form>
+  </nav>
 
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -50,7 +57,7 @@
       {{/ifvalue}}
       {{/if}}
       {{#if user}}
-           <li class="nav-item active dropdown">
+      <li class="nav-item active dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user-circle"></i> 
           {{user.nome}}
         </a>
@@ -69,6 +76,7 @@
             <li class="nav-item dropdown">
 
       {{/if}}
+    
     </ul>
         
   </div>

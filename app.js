@@ -37,6 +37,7 @@
             if(req.user){
             res.locals.user = req.user.toObject() || null;
             res.locals.session = req.session
+            
             }
             next()
         })
@@ -105,18 +106,50 @@
 
     //Public arquivos estáticos
         app.use(express.static(path.join(__dirname, 'public')));
-
-//Rotas
-    //pagina principal, carrega ferramentas
-    app.get("/" , (req,res) => {
-        Ferramenta.find({})
-        .limit(9)
-        .lean()
-        .then((ferramenta) => {
-        res.render('index', {ferramenta: ferramenta, layout: 'main2'})
+        
+        //Rotas
+        //pagina principal, carrega ferramentas
+        //FIXME: corrigir
+        page = 1
+    app.get(`/` , (req,res) => {
+        Ferramenta.countDocuments({}).lean().then((counter) => {
+            seta = req.query
+            search = req.query.busca
+            const page_size = 9
+            maxPages = Math.round(counter / page_size, 0)
+            const skip = (page - 1) * page_size
+            if (seta.next == 1){
+                if (page < maxPages){
+                    page ++
+                } else {
+                    page = maxPages
+                }
+            }
+            if (seta.prev == 1){
+                page --
+                if (page == 0) page = 1
+            }
+            if (search){
+                Ferramenta.find({$or: [{tipo: {$regex: new RegExp(search, "i")}},
+                {modelo: {$regex: new RegExp(search, "i")}}]})
+                .skip(skip)
+                .limit(page_size)
+                .lean()
+                .then((ferramenta) => {
+                res.render('index', {ferramenta: ferramenta, layout: 'main2'})
+            })
+            } else {
+                Ferramenta.find({})
+                .skip(skip)
+                .limit(page_size)
+                .lean()
+                .then((ferramenta) => {
+                res.render('index', {ferramenta: ferramenta, layout: 'main2'})
+                })
+            }
         })
     })
-    
+
     app.use('/admin', admin);
     app.use("/usuarios", usuarios)
     
