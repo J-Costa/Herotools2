@@ -16,7 +16,6 @@
     const Ferramenta = mongoose.model('Ferramenta')
     const usuarios = require('./routes/usuario');
     require("./config/auth")(passport)
-    
 
 //Configurações
     //configurar sessao
@@ -111,13 +110,11 @@
         //pagina principal, carrega ferramentas
         //FIXME: corrigir
         page = 1
-    app.get(`/` , (req,res) => {
+    app.get("/" , (req,res) => {
         Ferramenta.countDocuments({}).lean().then((counter) => {
             seta = req.query
             search = req.query.busca
             const page_size = 9
-            maxPages = Math.round(counter / page_size, 0)
-            const skip = (page - 1) * page_size
             if (seta.next == 1){
                 if (page < maxPages){
                     page ++
@@ -129,15 +126,16 @@
                 page --
                 if (page == 0) page = 1
             }
+            maxPages = Math.round(counter / page_size, 0)
+            const skip = (page - 1) * page_size
             if (search){
                 Ferramenta.find({$or: [{tipo: {$regex: new RegExp(search, "i")}},
                 {modelo: {$regex: new RegExp(search, "i")}}]})
-                .skip(skip)
-                .limit(page_size)
                 .lean()
+                .limit(page_size)
                 .then((ferramenta) => {
                 res.render('index', {ferramenta: ferramenta, layout: 'main2'})
-            })
+                })
             } else {
                 Ferramenta.find({})
                 .skip(skip)
