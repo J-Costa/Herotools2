@@ -12,13 +12,14 @@
     "express": "^4.17.1",
     "express-handlebars": "^4.0.6",
     "express-session": "^1.17.1",
+    "handlebars": "^4.7.6",
     "handlebars-dateformat": "^1.1.1",
     "locus": "^2.0.4",
     "mongoose": "^5.10.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
   },
-      "scripts": {
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
