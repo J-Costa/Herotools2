@@ -16,6 +16,7 @@
     const Ferramenta = mongoose.model('Ferramenta')
     const usuarios = require('./routes/usuario');
     require("./config/auth")(passport)
+    const db = require('./config/db')
 
 //Configurações
     //configurar sessao
@@ -97,7 +98,7 @@
     
     //Mongoose
     mongoose.Promise = global.Promise
-    mongoose.connect("mongodb://localhost/herotools", {useUnifiedTopology: true, useNewUrlParser: true}).then(()=>{
+    mongoose.connect(db.mongoURI, {useUnifiedTopology: true, useNewUrlParser: true}).then(()=>{
         console.log("Conectado ao mongoDB")
     }).catch((err)=>{
         console.log("Erro: " +err)
